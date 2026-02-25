@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block titulo %} OS - INVENTARIO {% endblock %}
+{% block titulo %} OS - GESTIÓN DE INVENTARIO {% endblock %}
 
 {% block contenido %} 
 <canvas id="matrix-canvas"></canvas>
@@ -28,10 +28,10 @@
     /* Contenedor principal con efecto cristal oscuro */
     .gamer-wrapper {
         background-color: rgba(0, 0, 0, 0.85);
-        border: 1px solid #39ff14;
-        box-shadow: 0 0 30px rgba(57, 255, 20, 0.15);
+        border: 1px solid #00ccff;
+        box-shadow: 0 0 30px rgba(0, 204, 255, 0.15);
         padding: 40px;
-        margin: 30px auto;
+        margin: 0 auto 30px;
         border-radius: 15px;
         max-width: 1400px;
         font-family: 'Rajdhani', sans-serif;
@@ -42,25 +42,6 @@
         font-family: 'Orbitron', sans-serif;
         text-transform: uppercase;
         letter-spacing: 2px;
-    }
-
-    h1 {
-        color: #fff;
-        text-shadow: 0 0 10px #39ff14, 0 0 20px #39ff14;
-         /* quitado el borde inferior porque el efecto glitch se ve mejor sin el */
-        /*border-bottom: 2px solid #39ff14;*/
-        padding-bottom: 15px;
-        margin-bottom: 30px;
-        text-align: center;
-        font-weight: 900;
-	position: relative; /* necesario para el efecto glitch */
-	font-size: 4rem;
-	text-transform: uppercase;
-	letter-spacing: 0.1em;
-	-webkit-text-stroke: 1px #39ff14; /* contorno verde */
-	overflow: hidden;
-	white-space: nowrap;
-	animation: animatedText 3.5s linear forwards;
     }
 
     @keyframes animatedText {
@@ -74,13 +55,13 @@
 
 
     h2 {
-        color: #39ff14;
-        text-shadow: 0 0 8px #39ff14;
-        border-left: 5px solid #39ff14;
+        color: #00ccff;
+        text-shadow: 0 0 8px #00ccff;
+        border-left: 5px solid #00ccff;
         padding-left: 15px;
         margin-top: 50px;
         margin-bottom: 25px;
-        background: linear-gradient(90deg, rgba(57, 255, 20, 0.1), transparent);
+        background: linear-gradient(90deg, rgba(0, 204, 255, 0.1), transparent);
     }
 
     p, li {
@@ -103,8 +84,8 @@
 
     .gamer-img:hover {
         transform: scale(1.05);
-        border-color: #39ff14;
-        box-shadow: 0 0 25px rgba(57, 255, 20, 0.6);
+        border-color: #00ccff;
+        box-shadow: 0 0 25px rgba(0, 204, 255, 0.6);
         filter: grayscale(0%);
         z-index: 10;
     }
@@ -115,18 +96,18 @@
         border-collapse: separate;
         border-spacing: 0;
         margin: 20px 0;
-        border: 1px solid #39ff14;
+        border: 1px solid #00ccff;
         border-radius: 8px;
         overflow: hidden;
     }
 
     .gamer-table th {
-        background: linear-gradient(90deg, #003300, #001a00);
-        color: #39ff14;
+        background: linear-gradient(90deg, #004466, #002233);
+        color: #00ccff;
         padding: 15px;
         font-family: 'Orbitron', sans-serif;
         text-transform: uppercase;
-        border-bottom: 2px solid #39ff14;
+        border-bottom: 2px solid #00ccff;
     }
 
     .gamer-table td {
@@ -138,8 +119,8 @@
 
     /* Botones estilo Cyberpunk */
     .gamer-btn {
-        background: linear-gradient(45deg, #006400, #39ff14);
-        color: white !important;
+        background: linear-gradient(45deg, #0088aa, #00ccff);
+        color: black !important;
         padding: 12px 30px;
         font-family: 'Orbitron', sans-serif;
         font-weight: bold;
@@ -154,15 +135,16 @@
     }
 
     .gamer-btn:hover {
-        background: linear-gradient(45deg, #39ff14, #006400);
+        background: linear-gradient(45deg, #00ccff, #0088aa);
+        color: white !important;
         transform: translateY(-3px);
-        box-shadow: 0 0 20px rgba(57, 255, 20, 0.6);
+        box-shadow: 0 0 20px rgba(0, 204, 255, 0.6);
     }
 
     /* Tarjetas de información */
     .info-card {
         background: rgba(20, 20, 20, 0.8);
-        border: 1px solid rgba(57, 255, 20, 0.3);
+        border: 1px solid rgba(0, 204, 255, 0.3);
         padding: 20px;
         margin-bottom: 20px;
         border-radius: 10px;
@@ -171,15 +153,15 @@
     }
 
     .info-card:hover {
-        border-color: #39ff14;
-        box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
+        border-color: #00ccff;
+        box-shadow: 0 0 15px rgba(0, 204, 255, 0.2);
     }
 
 
     /* Citas */
     blockquote {
-        border-left: 4px solid #39ff14;
-        background: linear-gradient(90deg, rgba(57, 255, 20, 0.1), transparent);
+        border-left: 4px solid #00ccff;
+        background: linear-gradient(90deg, rgba(0, 204, 255, 0.1), transparent);
         padding: 20px;
         font-style: italic;
         margin: 20px 0;
@@ -188,167 +170,102 @@
     
     /* Iframes y Videos */
     iframe {
-        border: 2px solid #39ff14;
-        box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
+        border: 2px solid #00ccff;
+        box-shadow: 0 0 15px rgba(0, 204, 255, 0.2);
         max-width: 100%;
         border-radius: 5px;
     }
 
     mark {
-        background-color: #39ff14;
+        background-color: #00ccff;
         color: black;
         padding: 0 5px;
     }
 
     hr {
-        border-color: #39ff14;
+        border-color: #00ccff;
         opacity: 0.5;
         margin: 40px 0;
     }
 </style>
 
-<div class="gamer-wrapper">
-    <!-- Logo Section -->
-    <div class="text-center mb-5">
-        <img src="https://gmedia.playstation.com/is/image/SIEPDC/stellar-blade-logo-01-20mar24$en?$native$" alt="Stellar Blade Logo" style="max-width: 400px; width: 100%; filter: drop-shadow(0 0 10px #ffffff);">
-    </div>
-
-    <h1>Stellar Blade</h1>
+<div>
+    <h1>GESTIÓN DE INVENTARIO</h1>
     
-    <div class="text-center mb-4">
-         <a href="#" class="gamer-btn">Otro Juego</a>
-    </div>
-
-    <div class="info-card">
-        <h2>Descripción de EVE</h2>
-        <p>EVE es miembro del 7º Escuadrón Aerotransportado de la Fuerza de Defensa. Originaria de la Colonia, llega a una Tierra desolada. Tras un feroz ataque sorpresa de los Naytibas que diezma su unidad, es salvada por Adam, un carroñero. Juntos se dirigen a Xion, la última ciudad, donde EVE promete eliminar a los Naytibas.</p>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <div class="info-card">
-                <h2>Biografía</h2>
-                <p>EVE completa misiones para la gente de Xion, cuestionando la naturaleza de su misión y de Madre Esfera. Se revela que ella y sus compañeros son Andro-Eidos, seres artificiales creados para reemplazar a los humanos, mientras que los Naytibas son los humanos originales mutados.</p>
+    <!-- Panel de Acciones -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="info-card text-center">
+                <h3>Importar</h3>
+                <p>Cargar inventario desde archivo excel.</p>
+                <button class="gamer-btn">Importar Inventario</button>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="info-card">
-                <h2>Apariencia</h2>
-                <p>Mujer alta y atlética, con el "Traje de buceo Planet (7º)". Su espada, Blood Edge, se transforma en un accesorio para el cabello. Su diseño combina estética futurista con combate de alta velocidad.</p>
+        <div class="col-md-4">
+            <div class="info-card text-center">
+                <h3>Exportar</h3>
+                <p>Descargar reporte actual de stock.</p>
+                <button class="gamer-btn">Exportar Inventario</button>
             </div>
         </div>
-    </div>
-
-    <div class="row mt-4">
-        <div class="col-md-4"><img src="https://www.xtrafondos.com/wallpapers/juego-stellar-blade-project-eve-12750.jpg" class="gamer-img"></div>
-        <div class="col-md-4"><img src="https://i.pinimg.com/736x/04/fe/56/04fe5671e2143dd93bbcca5d68fe9644.jpg" class="gamer-img"></div>
-        <div class="col-md-4"><img src="https://sm.ign.com/t/ign_latam/screenshot/default/stellar-blade-modo-foto_22tc.1280.jpg" class="gamer-img"></div>
+        <div class="col-md-4">
+            <div class="info-card text-center">
+                <h3>Nuevo</h3>
+                <p>Registrar manualmente un nuevo producto.</p>
+                <button class="gamer-btn">Agregar Producto</button>
+            </div>
+        </div>
     </div>
 
     <hr>
 
-    <h2>Personalidad</h2>
-    <p><i>EVE es directa y directa, como corresponde a un soldado. También parece tener un seco sentido del humor y sarcasmo. Sin embargo, se muestra que EVE tiene un lado compasivo hacia personajes como Kaya.</i></p>
-    
-    <div class="row mt-4">
-        <div class="col-md-4"><img src="https://mp1st.com/wp-content/uploads/2024/11/stellar-blade-nier-1.jpg.webp" class="gamer-img"></div>
-        <div class="col-md-4"><img src="https://w.wallhaven.cc/full/rr/wallhaven-rr9p2m.jpg" class="gamer-img"></div>
-        <div class="col-md-4"><img src="https://w.wallhaven.cc/full/2y/wallhaven-2y7lem.jpg" class="gamer-img"></div>
-    </div>
-
-    <h2 class="mt-5">Personajes</h2>
+    <h2 class="mt-5">Productos Registrados</h2>
     <table class="gamer-table">
         <thead>
             <tr>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Edad (Aprox)</th>
+                <th>ID</th>
+                <th>Producto</th>
+                <th>Categoría</th>
+                <th>Stock</th>
+                <th>Precio</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>EVE</td>
-                <td>-</td>
-                <td>20 (Apariencia)</td>
+                <td>001</td>
+                <td>Procesador Quantum</td>
+                <td>Hardware</td>
+                <td>50</td>
+                <td>$1200</td>
+                <td><button class="btn btn-sm btn-outline-light">Editar</button></td>
             </tr>
             <tr>
-                <td>Adam</td>
-                <td>-</td>
-                <td>20 (Apariencia)</td>
+                <td>002</td>
+                <td>Memoria Holográfica</td>
+                <td>Almacenamiento</td>
+                <td>120</td>
+                <td>$300</td>
+                <td><button class="btn btn-sm btn-outline-light">Editar</button></td>
             </tr>
             <tr>
-                <td>Lily</td>
-                <td>Artemis</td>
-                <td>23-24</td>
+                <td>003</td>
+                <td>Interfaz Neural</td>
+                <td>Periféricos</td>
+                <td>15</td>
+                <td>$2500</td>
+                <td><button class="btn btn-sm btn-outline-light">Editar</button></td>
             </tr>
         </tbody>
     </table>
 
-    <h2 class="mt-5">Escenarios</h2>
-    <div class="row">
-        <div class="col-md-4">
-            <div class="info-card">
-                <h3>Xion City</h3>
-                <p>La última ciudad restante de la humanidad.</p>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="info-card">
-                <h3>The Wasteland</h3>
-                <p>Región exterior hostil y desértica.</p>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="info-card">
-                <h3>Great Desert</h3>
-                <p>Vasto espacio abierto para exploración.</p>
-            </div>
-        </div>
-    </div>
-
-    <h2 class="mt-5">Historia y Lore</h2>
-    <blockquote>
-        EVE tiene la tarea de recolectar cuatro Núcleos alfa para abrir el camino al Nido donde vive el Anciano Naytiba. Todo el viaje fue un plan creado por el Anciano Naytiba para exponer gradualmente a EVE y Lily a la verdadera historia del mundo.
-    </blockquote>
-
-    <h2 class="mt-5">Gameplays</h2>
-    <div class="row text-center">
-        <div class="col-md-4 mb-3">
-            <iframe width="100%" height="250" src="https://www.youtube.com/embed/QH_8sj-mbCg?si=bMfarPk3DBL7W5ZX" frameborder="0" allowfullscreen></iframe>
-        </div>
-        <div class="col-md-4 mb-3">
-            <iframe width="100%" height="250" src="https://www.youtube.com/embed/NaOLWyuWOtw?si=oqA0DafDOoCLIkk1" frameborder="0" allowfullscreen></iframe>
-        </div>
-        <div class="col-md-4 mb-3">
-            <iframe width="100%" height="250" src="https://www.youtube.com/embed/Ym3GuHn9gU0?si=bVrEkjVY3x0qBzaE" frameborder="0" allowfullscreen></iframe>
-        </div>
-    </div>
-
     <div class="text-center mt-5">
-        <h2 class="mb-4">Extras</h2>
-        <div class="row justify-content-center">
-            <div class="col-md-3">
-                <img src="https://media1.tenor.com/m/T-Aa2DeWT1gAAAAC/stellar-blade.gif" class="gamer-img" style="height: 200px;">
-            </div>
-            <div class="col-md-3">
-                <img src="https://media1.tenor.com/m/j1_mpn0FoQoAAAAC/stellar-blade-yay.gif" class="gamer-img" style="height: 200px;">
-            </div>
-            <div class="col-md-3">
-                <img src="https://media1.tenor.com/m/iKKgTGneKNoAAAAC/stellar-blade-project-eve.gif" class="gamer-img" style="height: 200px;">
-            </div>
-        </div>
-
         <div class="mt-4">
             <button type="button" class="gamer-btn" onclick="document.getElementById('demo').innerHTML = new Date().toLocaleTimeString()">Mostrar Hora del Sistema</button>
-            <p id="demo" style="color: #39ff14; font-size: 2rem; font-family: 'Orbitron'; margin-top: 10px;"></p>
-        </div>
-        
-        <div class="mt-4">
-            <a href="https://store.steampowered.com/agecheck/app/3489700/" target="_blank" class="gamer-btn">COMPRAR JUEGO</a>
-            <input type="button" class="gamer-btn" onclick="alert('¡Excelente elección, soldado!')" value="Recomendación">
+            <p id="demo" style="color: #00ccff; font-size: 2rem; font-family: 'Orbitron'; margin-top: 10px;"></p>
         </div>
     </div>
 </div>
 {% endblock %}
 
-{% block pie %} Usted esta parado en otro lado {% endblock %}
+{% block pie %} Sistema de Gestión de Inventario v1.0 {% endblock %}
