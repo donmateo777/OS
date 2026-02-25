@@ -4,277 +4,147 @@
 
 {% block contenido %} 
 <style>
-    /* Importamos una fuente estilo 8-bit */
-    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-    
-    /* Override del fondo general para esta página a Negro */
-    body {
-        background-color: #000 !important;
+  /* Override de colores verdes a azules para esta vista */
+    .navbar-custom {
+        border-bottom: 2px solid #00ccff !important;
+        box-shadow: 0 0 20px rgba(0, 204, 255, 0.2) !important;
+    }
+    .nav-link-custom:hover {
+        background-color: rgba(0, 204, 255, 0.1) !important;
+        color: #00ccff !important;
+        text-shadow: 0 0 8px #00ccff !important;
+        border-left: 2px solid #00ccff !important;
+    }
+    .nav-link-custom.active {
+        color: #00ccff !important;
+        text-shadow: 0 0 10px #00ccff !important;
+        border-bottom: 2px solid #00ccff !important;
+    }
+    h1 {
+        text-shadow: 2px 2px 0 #00ccff, -2px -2px 0 #004466 !important;
+    }
+    .navbar-brand-custom {
+        text-shadow: 0 0 10px #00ccff !important;
     }
 
-    .scott-container {
-        font-family: 'Press Start 2P', cursive;
-        background-color: #111;
-        border: 5px solid #ff6600;
-        padding: 20px;
-        margin: 20px auto;
-        box-shadow: 10px 10px 0px #333;
-        max-width: 900px;
+    /* Estilos del Login */
+    .login-container {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
-
-    .scott-title {
-        color: #ff6600;
-        text-shadow: 4px 4px 0px #fff, -2px -2px 0px #333;
-        font-size: 2rem;
-        text-align: center;
-        margin-bottom: 30px;
-        text-transform: uppercase;
-        line-height: 1.5;
-    }
-
-    .comic-panel {
-        border: 3px solid #ff6600;
-        background: #222;
-        padding: 15px;
+    .card-login {
+        background: rgba(0, 10, 20, 0.9); /* <-- CAMBIAR COLOR DE FONDO AQUÍ */
+        border: 1px solid #00ccff; /* <-- CAMBIAR COLOR DEL BORDE AQUÍ */
+        box-shadow: 0 0 30px rgba(0, 204, 255, 0.15);
+        width: 100%;
+        max-width: 1500px; /* <-- CAMBIAR TAMAÑO (ANCHO) AQUÍ */
+        padding: 2rem;
+        border-radius: 15px;
         position: relative;
+        overflow: hidden;
     }
-
-    .stats-bar {
-        height: 15px;
-        background: #000;
-        border: 2px solid #ff6600;
-        margin-bottom: 10px;
+    .card-login::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, transparent, #00ccff, transparent);
+        animation: scan 2s infinite;
     }
-
-    .char-card {
+    @keyframes scan {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+    .form-label {
+        color: #00ccff;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 0.9rem;
+    }
+    .form-control-neon {
+        background: #050505;
+        border: 1px solid #004466;
+        color: #fff;
         transition: all 0.3s;
-        cursor: pointer;
     }
-    .char-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 5px 15px rgba(255, 102, 0, 0.4);
-        background-color: #333 !important;
+    .form-control-neon:focus {
+        background: #000;
+        border-color: #00ccff;
+        box-shadow: 0 0 15px rgba(0, 204, 255, 0.3);
+        color: #fff;
+    }
+    .btn-neon {
+        background: #00ccff;
+        color: #000;
+        font-family: 'Orbitron', sans-serif;
+        font-weight: bold;
+        border: none;
+        padding: 10px;
+        transition: all 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .btn-neon:hover {
+        background: #fff;
+        color: #00ccff;
+        box-shadow: 0 0 20px #00ccff;
+    }
+    .social-btn {
+        background: transparent;
+        border: 1px solid #333;
+        color: #ccc;
+        transition: all 0.3s;
+    }
+    .social-btn:hover {
+        border-color: #00ccff;
+        color: #fff;
+        background: rgba(0, 204, 255, 0.1);
+    }
+    .link-neon {
+        color: #0088aa;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: all 0.3s;
+    }
+    .link-neon:hover {
+        color: #00ccff;
+        text-shadow: 0 0 5px #00ccff;
     }
 </style>
 
-<div class="container">
-    <div class="scott-container">
-        <h1 class="scott-title">LEVEL: NOSOTROS</h1>
+<body>
+<div class="container login-container">
+    <div class="card-login">
+        <h2 class="text-center mb-5" style="font-family: 'Orbitron', sans-serif; color: #fff; text-shadow: 0 0 10px #00ccff;">
+            INFORMACIÓN CORPORATIVA
+        </h2>
         
-        <div class="row align-items-center">
-            <div class="col-md-5 text-center">
-                <div class="comic-panel mb-3">
-                    <!-- Imagen estilo Scott Pilgrim -->
-                    <img src="https://preview.redd.it/scott-pilgrim-and-ramona-flowers-not-artist-v0-hepz06r5gaud1.jpeg?width=640&crop=smart&auto=webp&s=e0806175a2cf642a8a069b8818ef94cbc428b584" class="img-fluid" style="border: 2px solid #ff6600;" alt="Scott y Ramona">
-                </div>
-                <div style="text-align: left; font-size: 0.7rem; color: #ff6600;">
-                    <p class="mb-1">HP: <div class="stats-bar"><div style="height: 100%; background: #ff3300; width: 90%;"></div></div></p>
-                    <p class="mb-1">GUTS: <div class="stats-bar"><div style="height: 100%; background: #ffcc00; width: 75%;"></div></div></p>
-                </div>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <h4 style="color: #00ccff; font-family: 'Orbitron', sans-serif; border-bottom: 1px solid #004466; padding-bottom: 10px;">Nuestra Misión</h4>
+                <p style="color: #ccc; line-height: 1.6;">
+                    Proveer equipamiento deportivo de alta calidad integrando tecnología de vanguardia, para potenciar el rendimiento de atletas y aficionados al fútbol.
+                </p>
             </div>
-            
-            <div class="col-md-7">
-                <div class="comic-panel" style="background: #222;">
-                    <h3 style="font-size: 1rem; color: #ff6600; margin-bottom: 15px;">MISION:</h3>
-                    <p style="font-family: 'Courier New', monospace; font-weight: bold; font-size: 1.1rem; line-height: 1.4; color: #fff;">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore, esse aliquam id ullam excepturi amet unde aspernatur.
-                    </p>
-                </div>
-                <br>
-                <div class="text-center">
-                    <button class="btn btn-lg" style="background-color: #ff6600; color: #000; font-family: 'Press Start 2P'; border: 3px solid #fff; box-shadow: 5px 5px 0px #333; text-transform: uppercase;">
-                        Fight!
-                    </button>
-                </div>
+            <div class="col-md-6">
+                <h4 style="color: #00ccff; font-family: 'Orbitron', sans-serif; border-bottom: 1px solid #004466; padding-bottom: 10px;">Nuestra Visión</h4>
+                <p style="color: #ccc; line-height: 1.6;">
+                    Ser líderes en el mercado deportivo digital para el año 2030, reconocidos por nuestra innovación y excelencia en servicio al cliente.
+                </p>
             </div>
-        </div>
-
-        <!-- Separador Estilo Retro -->
-        <div style="border-top: 4px dashed #ff6600; margin: 40px 0;"></div>
-
-        <!-- Sección de Información del Videojuego -->
-        <h2 class="scott-title" style="font-size: 1.2rem;">BASE DE DATOS: EL JUEGO</h2>
-        
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <div class="comic-panel" style="height: 100%;">
-                    <h4 style="color: #ff6600; font-size: 0.9rem; margin-bottom: 15px;">SCOTT PILGRIM VS. THE WORLD: THE GAME</h4>
-                    <p style="font-family: 'Courier New', monospace; color: #fff; font-size: 0.9rem;">
-                        Un "beat 'em up" legendario estilo 2D arcade inspirado en los cómics de Bryan Lee O'Malley. 
-                        Lucha como Scott, Ramona, Kim o Stills para vencer a la Liga de los 7 Ex-Novios Malvados.
-                    </p>
-                    <p style="font-family: 'Courier New', monospace; color: #ff6600; font-size: 0.8rem;">
-                        > SOUNDTRACK: Anamanaguchi (Chiptune Punk)
-                    </p>
-                </div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <div class="comic-panel" style="height: 100%;">
-                    <h4 style="color: #ff6600; font-size: 0.9rem; margin-bottom: 15px;">EDICIÓN COMPLETA (2021)</h4>
-                    <p style="font-family: 'Courier New', monospace; color: #fff; font-size: 0.9rem;">
-                        La versión definitiva que trajo el juego de vuelta tras años desaparecido. Incluye los DLCs de 
-                        <strong>Knives Chau</strong> y <strong>Wallace Wells</strong>.
-                    </p>
-                    <div style="background: #000; color: #ff6600; padding: 5px; text-align: center; font-size: 0.7rem; margin-top: 10px; border: 1px solid #ff6600;">
-                        CALIFICACIÓN: ★★★★★
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Separador -->
-        <div style="border-top: 4px dashed #ff6600; margin: 40px 0;"></div>
-
-        <!-- SECCIÓN DE PERSONAJES -->
-        <h2 class="scott-title">SELECCIÓN DE PERSONAJE</h2>
-        
-        <div class="row">
-            <!-- Personaje 1: Scott -->
-            <div class="col-md-4 mb-4">
-                <div class="comic-panel char-card" style="height: 100%;">
-                    <img src="https://api.dicebear.com/9.x/pixel-art/svg?seed=ScottPilgrim" class="img-fluid mb-3" style="border: 2px solid #fff; width: 100%; height: 200px; object-fit: cover;" alt="Scott">
-                    <img src="https://api.dicebear.com/9.x/adventurer/svg?seed=Scott" class="img-fluid mb-3" style="border: 2px solid #fff; width: 100%; height: 200px; object-fit: cover;" alt="Scott">
-                    <h4 style="color: #ff6600; font-size: 0.9rem;">SCOTT PILGRIM</h4>
-                    <p style="color: #fff; font-size: 0.7rem; font-family: 'Courier New';">
-                        El mejor peleador de la provincia. Toca el bajo en Sex Bob-Omb.
-                    </p>
-                    <div style="background: #000; padding: 10px; border: 1px solid #ff6600;">
-                        <strong style="color: #ff6600; font-size: 0.7rem;">MOVIMIENTOS:</strong>
-                        <ul style="color: #fff; font-size: 0.6rem; margin-bottom: 0; padding-left: 20px; font-family: 'Courier New';">
-                            <li>Técnica Shoryuken</li>
-                            <li>Patada Giratoria Aérea</li>
-                            <li>Invocar a Knives</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Personaje 2: Ramona -->
-            <div class="col-md-4 mb-4">
-                <div class="comic-panel char-card" style="height: 100%;">
-                    <img src="https://api.dicebear.com/9.x/pixel-art/svg?seed=RamonaFlowers" class="img-fluid mb-3" style="border: 2px solid #fff; width: 100%; height: 200px; object-fit: cover;" alt="Ramona">
-                    <img src="https://api.dicebear.com/9.x/adventurer/svg?seed=Ramona" class="img-fluid mb-3" style="border: 2px solid #fff; width: 100%; height: 200px; object-fit: cover;" alt="Ramona">
-                    <h4 style="color: #ff0055; font-size: 0.9rem;">RAMONA FLOWERS</h4>
-                    <p style="color: #fff; font-size: 0.7rem; font-family: 'Courier New';">
-                        Repartidora ninja de Amazon. Tiene 7 ex-novios malvados.
-                    </p>
-                    <div style="background: #000; padding: 10px; border: 1px solid #ff0055;">
-                        <strong style="color: #ff0055; font-size: 0.7rem;">MOVIMIENTOS:</strong>
-                        <ul style="color: #fff; font-size: 0.6rem; margin-bottom: 0; padding-left: 20px; font-family: 'Courier New';">
-                            <li>Maleta Subespacial</li>
-                            <li>Martillo Gigante</li>
-                            <li>Bate de Titanio</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Personaje 3: Kim -->
-            <div class="col-md-4 mb-4">
-                <div class="comic-panel char-card" style="height: 100%;">
-                    <img src="https://api.dicebear.com/9.x/pixel-art/svg?seed=KimPine" class="img-fluid mb-3" style="border: 2px solid #fff; width: 100%; height: 200px; object-fit: cover;" alt="Kim">
-                    <img src="https://api.dicebear.com/9.x/adventurer/svg?seed=Kim" class="img-fluid mb-3" style="border: 2px solid #fff; width: 100%; height: 200px; object-fit: cover;" alt="Kim">
-                    <h4 style="color: #cc0000; font-size: 0.9rem;">KIM PINE</h4>
-                    <p style="color: #fff; font-size: 0.7rem; font-family: 'Courier New';">
-                        Baterista de Sex Bob-Omb. Odia a todo el mundo (especialmente a Scott).
-                    </p>
-                    <div style="background: #000; padding: 10px; border: 1px solid #cc0000;">
-                        <strong style="color: #cc0000; font-size: 0.7rem;">MOVIMIENTOS:</strong>
-                        <ul style="color: #fff; font-size: 0.6rem; margin-bottom: 0; padding-left: 20px; font-family: 'Courier New';">
-                            <li>Onda de Choque</li>
-                            <li>Pánico Total</li>
-                            <li>Mirada Mortal</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-             <!-- Personaje 4: Stephen -->
-             <div class="col-md-4 mb-4">
-                <div class="comic-panel char-card" style="height: 100%;">
-                    <img src="https://api.dicebear.com/9.x/pixel-art/svg?seed=StephenStills" class="img-fluid mb-3" style="border: 2px solid #fff; width: 100%; height: 200px; object-fit: cover;" alt="Stephen">
-                    <img src="https://api.dicebear.com/9.x/adventurer/svg?seed=Stephen" class="img-fluid mb-3" style="border: 2px solid #fff; width: 100%; height: 200px; object-fit: cover;" alt="Stephen">
-                    <h4 style="color: #00ccff; font-size: 0.9rem;">STEPHEN STILLS</h4>
-                    <p style="color: #fff; font-size: 0.7rem; font-family: 'Courier New';">
-                        El talento de la banda. Cantante y guitarrista principal.
-                    </p>
-                    <div style="background: #000; padding: 10px; border: 1px solid #00ccff;">
-                        <strong style="color: #00ccff; font-size: 0.7rem;">MOVIMIENTOS:</strong>
-                        <ul style="color: #fff; font-size: 0.6rem; margin-bottom: 0; padding-left: 20px; font-family: 'Courier New';">
-                            <li>Solo de Guitarra</li>
-                            <li>Acorde de Poder</li>
-                            <li>Ataque de Ansiedad</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Personaje 5: Knives -->
-            <div class="col-md-4 mb-4">
-                <div class="comic-panel char-card" style="height: 100%;">
-                    <img src="https://api.dicebear.com/9.x/pixel-art/svg?seed=KnivesChau" class="img-fluid mb-3" style="border: 2px solid #fff; width: 100%; height: 200px; object-fit: cover;" alt="Knives">
-                    <img src="https://api.dicebear.com/9.x/adventurer/svg?seed=Knives" class="img-fluid mb-3" style="border: 2px solid #fff; width: 100%; height: 200px; object-fit: cover;" alt="Knives">
-                    <h4 style="color: #9900cc; font-size: 0.9rem;">KNIVES CHAU</h4>
-                    <p style="color: #fff; font-size: 0.7rem; font-family: 'Courier New';">
-                        La fan número uno. Demasiado intensa.
-                    </p>
-                    <div style="background: #000; padding: 10px; border: 1px solid #9900cc;">
-                        <strong style="color: #9900cc; font-size: 0.7rem;">MOVIMIENTOS:</strong>
-                        <ul style="color: #fff; font-size: 0.6rem; margin-bottom: 0; padding-left: 20px; font-family: 'Courier New';">
-                            <li>Lanzamiento de Dagas</li>
-                            <li>Bofetada de Amor</li>
-                            <li>Chillido Sónico</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Personaje 6: Wallace -->
-            <div class="col-md-4 mb-4">
-                <div class="comic-panel char-card" style="height: 100%;">
-                    <img src="https://api.dicebear.com/9.x/pixel-art/svg?seed=WallaceWells" class="img-fluid mb-3" style="border: 2px solid #fff; width: 100%; height: 200px; object-fit: cover;" alt="Wallace">
-                    <img src="https://api.dicebear.com/9.x/adventurer/svg?seed=Wallace" class="img-fluid mb-3" style="border: 2px solid #fff; width: 100%; height: 200px; object-fit: cover;" alt="Wallace">
-                    <h4 style="color: #ffff00; font-size: 0.9rem;">WALLACE WELLS</h4>
-                    <p style="color: #fff; font-size: 0.7rem; font-family: 'Courier New';">
-                        Compañero de cuarto gay cool. Roba novios.
-                    </p>
-                    <div style="background: #000; padding: 10px; border: 1px solid #ffff00;">
-                        <strong style="color: #ffff00; font-size: 0.7rem;">MOVIMIENTOS:</strong>
-                        <ul style="color: #fff; font-size: 0.6rem; margin-bottom: 0; padding-left: 20px; font-family: 'Courier New';">
-                            <li>Comentario Sarcástico</li>
-                            <li>Pagar la Renta</li>
-                            <li>Beso Misterioso</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Separador -->
-        <div style="border-top: 4px dashed #ff6600; margin: 40px 0;"></div>
-
-        <!-- SECCIÓN DE ENEMIGOS -->
-        <h2 class="scott-title">LIGA DE LOS EX-NOVIOS MALVADOS</h2>
-        <div class="row text-center">
-            <div class="col-12">
-                <div class="comic-panel" style="background: #330000; border-color: #ff0000;">
-                    <p style="color: #fff; font-family: 'Courier New'; margin-bottom: 20px;">
-                        ADVERTENCIA: VÉNCELOS A TODOS PARA SALIR CON RAMONA
-                    </p>
-                    <div class="row justify-content-center">
-                        <div class="col-md-2 col-4 mb-2"><img src="https://api.dicebear.com/9.x/pixel-art/svg?seed=MatthewPatel" class="img-fluid rounded-circle border border-danger" title="Matthew Patel"></div>
-                        <div class="col-md-2 col-4 mb-2"><img src="https://api.dicebear.com/9.x/pixel-art/svg?seed=LucasLee" class="img-fluid rounded-circle border border-danger" title="Lucas Lee"></div>
-                        <div class="col-md-2 col-4 mb-2"><img src="https://api.dicebear.com/9.x/pixel-art/svg?seed=ToddIngram" class="img-fluid rounded-circle border border-danger" title="Todd Ingram"></div>
-                        <div class="col-md-2 col-4 mb-2"><img src="https://api.dicebear.com/9.x/pixel-art/svg?seed=RoxieRichter" class="img-fluid rounded-circle border border-danger" title="Roxie Richter"></div>
-                        <div class="col-md-2 col-4 mb-2"><img src="https://api.dicebear.com/9.x/pixel-art/svg?seed=KyleKen" class="img-fluid rounded-circle border border-danger" title="Kyle & Ken"></div>
-                        <div class="col-md-2 col-4 mb-2"><img src="https://api.dicebear.com/9.x/pixel-art/svg?seed=GideonGraves" class="img-fluid rounded-circle border border-danger" title="Gideon Graves"></div>
-                        <div class="col-md-2 col-4 mb-2"><img src="https://api.dicebear.com/9.x/pixel-art/svg?seed=NegaScott" class="img-fluid rounded-circle border border-danger" title="Nega Scott"></div>
-                    </div>
-                </div>
+            <div class="col-12 mt-4">
+                <h4 style="color: #00ccff; font-family: 'Orbitron', sans-serif; border-bottom: 1px solid #004466; padding-bottom: 10px;">Quiénes Somos</h4>
+                <p style="color: #ccc; line-height: 1.6;">
+                    OS STORE SOCCER es una empresa dedicada a la venta de artículos deportivos con un enfoque futurista. Nos apasiona el fútbol y la tecnología, y trabajamos día a día para ofrecerte lo mejor de ambos mundos.
+                </p>
             </div>
         </div>
     </div>
 </div>
+</body>
 
 {% endblock %}
 
