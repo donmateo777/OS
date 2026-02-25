@@ -31,7 +31,7 @@
         border: 1px solid #00ccff;
         box-shadow: 0 0 30px rgba(0, 204, 255, 0.15);
         padding: 40px;
-        margin: 30px auto;
+        margin: 0 auto 30px;
         border-radius: 15px;
         max-width: 1400px;
         font-family: 'Rajdhani', sans-serif;
@@ -42,25 +42,6 @@
         font-family: 'Orbitron', sans-serif;
         text-transform: uppercase;
         letter-spacing: 2px;
-    }
-
-    h1 {
-        color: #fff;
-        text-shadow: 0 0 10px #00ccff, 0 0 20px #00ccff;
-         /* quitado el borde inferior porque el efecto glitch se ve mejor sin el */
-        /*border-bottom: 2px solid #39ff14;*/
-        padding-bottom: 15px;
-        margin-bottom: 30px;
-        text-align: center;
-        font-weight: 900;
-	position: relative; /* necesario para el efecto glitch */
-	font-size: 4rem;
-	text-transform: uppercase;
-	letter-spacing: 0.1em;
-	-webkit-text-stroke: 1px #00ccff; /* contorno azul */
-	overflow: hidden;
-	white-space: nowrap;
-	animation: animatedText 3.5s linear forwards;
     }
 
     @keyframes animatedText {
@@ -208,7 +189,7 @@
     }
 </style>
 
-<div class="gamer-wrapper">
+<div>
     <h1>GESTIÓN DE INVENTARIO</h1>
     
     <!-- Panel de Acciones -->
