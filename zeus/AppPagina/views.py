@@ -3,20 +3,16 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 # Create your views here.
-def saludo(request):
-    return HttpResponse("Buenas tardes a TODOS---")
 
-def despedir(request):
-    return HttpResponse("Hasta la vista Babys---")
 
-def nosotros(request):
-    return render(request, 'paginas/nosotros.html')
+def principal(request):
+    return render(request, 'paginas/principal.html')
 
-def inicio(request):
-    return render(request, 'paginas/inicio.html')
+def index(request):
+    return render(request, 'paginas/index.html')
 
-def servicios(request):
-    return render(request, 'paginas/servicios.html')
+def inventario(request):
+    return render(request, 'paginas/inventario.html')
 
-def contacto(request):
-    return render(request, 'paginas/contacto.html')
+def registro(request):
+    return render(request, 'paginas/registro.html')

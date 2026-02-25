@@ -73,21 +73,20 @@
 </head>
 <body>
     <nav>
-        <h1>Sistema de Control de Estudiantes</h1>
+        <h1>OS STORRE SOCCER</h1>
         
         <!-- Barra de Navegación Mejorada -->
         <nav class="navbar navbar-expand-lg navbar-custom">
             <div class="container-fluid">
-                <a class="navbar-brand navbar-brand-custom" href="{% url 'inicio' %}">📚 Sistema Asistencia</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <div class="navbar-nav ms-auto">
-                        <a class="nav-link nav-link-custom active" aria-current="page" href="{% url 'inicio' %}">Inicio</a>
-                        <a class="nav-link nav-link-custom" href="{% url 'servicios' %}">Servicios</a>
-                        <a class="nav-link nav-link-custom" href="{% url 'nosotros' %}">Nosotros</a>
-                        <a class="nav-link nav-link-custom" href="{% url 'contacto' %}">Contáctenos</a>
+                        <a class="nav-link nav-link-custom active" aria-current="page" href="{% url 'index' %}">Inicio de Sesión</a>
+                        <a class="nav-link nav-link-custom" href="{% url 'inventario' %}">Inventario</a>
+                        <a class="nav-link nav-link-custom" href="{% url 'principal' %}">Pagina Principal</a>
+                        <a class="nav-link nav-link-custom" href="{% url 'registro' %}">Crear Cuenta</a>
                     </div>
                 </div>
             </div>
@@ -95,8 +94,6 @@
         
         <hr>
     </nav>
-
-    <h2>Este contenido fue colocado desde HTML hija</h2>
     {% block contenido %} 
     
     {% endblock %}

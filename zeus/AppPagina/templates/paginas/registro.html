@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block titulo %} OS - CREAR CUENTA {% endblock %}
+
+{% block contenido %} 
+<style>
+    /* Override de colores verdes a azules para esta vista */
+    .navbar-custom {
+        border-bottom: 2px solid #00ccff !important;
+        box-shadow: 0 0 20px rgba(0, 204, 255, 0.2) !important;
+    }
+    .nav-link-custom:hover {
+        background-color: rgba(0, 204, 255, 0.1) !important;
+        color: #00ccff !important;
+        text-shadow: 0 0 8px #00ccff !important;
+        border-left: 2px solid #00ccff !important;
+    }
+    .nav-link-custom.active {
+        color: #00ccff !important;
+        text-shadow: 0 0 10px #00ccff !important;
+        border-bottom: 2px solid #00ccff !important;
+    }
+    h1 {
+        text-shadow: 2px 2px 0 #00ccff, -2px -2px 0 #004466 !important;
+    }
+    .navbar-brand-custom {
+        text-shadow: 0 0 10px #00ccff !important;
+    }
+
+    /* Estilos del Formulario de Registro */
+    .registration-container {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .card-registration {
+        background: rgba(0, 10, 20, 0.9);
+        border: 1px solid #00ccff;
+        box-shadow: 0 0 30px rgba(0, 204, 255, 0.15);
+        width: 100%;
+        max-width: 550px; /* Un poco más ancho para más campos */
+        padding: 2rem;
+        border-radius: 15px;
+        position: relative;
+        overflow: hidden;
+    }
+    .card-registration::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, transparent, #00ccff, transparent);
+        animation: scan 2s infinite;
+    }
+    @keyframes scan {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+    .form-label {
+        color: #00ccff;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 0.9rem;
+    }
+    .form-control-neon {
+        background: #050505;
+        border: 1px solid #004466;
+        color: #fff;
+        transition: all 0.3s;
+    }
+    .form-control-neon:focus {
+        background: #000 !important;
+        border-color: #00ccff !important;
+        box-shadow: 0 0 15px rgba(0, 204, 255, 0.3) !important;
+        color: #fff !important;
+    }
+    .btn-neon {
+        background: #00ccff;
+        color: #000;
+        font-family: 'Orbitron', sans-serif;
+        font-weight: bold;
+        border: none;
+        padding: 10px;
+        transition: all 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .btn-neon:hover {
+        background: #fff !important;
+        color: #00ccff !important;
+        box-shadow: 0 0 20px #00ccff;
+    }
+    .form-check-label {
+        color: #ccc;
+        font-size: 0.9rem;
+    }
+    .form-check-input:checked {
+        background-color: #00ccff;
+        border-color: #00ccff;
+    }
+    .form-check-input:focus {
+        box-shadow: 0 0 0 0.25rem rgba(0, 204, 255, 0.25);
+    }
+</style>
+
+<div class="container registration-container">
+    <div class="card-registration">
+        <h2 class="text-center mb-4" style="font-family: 'Orbitron', sans-serif; color: #fff; text-shadow: 0 0 10px #00ccff;">CREAR CUENTA</h2>
+        
+        <form>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" class="form-control form-control-neon" id="nombre" placeholder="Tu Nombre">
+                </div>
+                <div class="col-md-6">
+                    <label for="apellido" class="form-label">Apellido</label>
+                    <input type="text" class="form-control form-control-neon" id="apellido" placeholder="Tu Apellido">
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="email" class="form-label">Correo Electrónico</label>
+                <input type="email" class="form-control form-control-neon" id="email" placeholder="usuario@ejemplo.com">
+            </div>
+            
+            <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" class="form-control form-control-neon" id="password" placeholder="••••••••">
+            </div>
+            
+            <div class="mb-3">
+                <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
+                <input type="password" class="form-control form-control-neon" id="confirmPassword" placeholder="••••••••">
+            </div>
+            
+            <div class="mb-4 form-check">
+                <input type="checkbox" class="form-check-input" id="privacyPolicy">
+                <label class="form-check-label" for="privacyPolicy">He leído y acepto la <a href="#" class="link-neon">política de privacidad de datos</a>.</label>
+            </div>
+            
+            <div class="d-grid">
+                <button type="submit" class="btn btn-neon">Crear Cuenta</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block pie %} 
+<div class="text-center py-3" style="color: #005577;">
+    &copy; 2026 Sistema de Asistencia. Todos los derechos reservados.
+</div>
+{% endblock %}
