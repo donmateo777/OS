@@ -31,10 +31,8 @@
 
     /* Estilos del Login */
     .login-container {
-        min-height: 80vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        padding-top: 3rem;
+        padding-bottom: 1rem;
     }
     .card-login {
         background: rgba(0, 10, 20, 0.9); /* <-- CAMBIAR COLOR DE FONDO AQUÍ */
@@ -44,6 +42,7 @@
         max-width: 1500px; /* <-- CAMBIAR TAMAÑO (ANCHO) AQUÍ */
         padding: 2rem;
         border-radius: 15px;
+        margin: 0 auto 2rem auto; /* Centra la tarjeta y añade margen inferior */
         position: relative;
         overflow: hidden;
     }
@@ -115,10 +114,62 @@
         color: #00ccff;
         text-shadow: 0 0 5px #00ccff;
     }
+    .mission-image {
+        width: 40%;
+        height: auto;
+        border-radius: 64px;
+        float: left;
+        margin-right: 20px;
+        margin-bottom: 10px;
+        transition: transform 0.3s ease-in-out;
+    border: 2px solid #00ccff;
+    box-shadow: 0 0 15px rgba(0, 204, 255, 0.4);
+    }
+    .mission-image:hover {
+        transform: scale(1.05);
+    }
+    .feature-list {
+        list-style: none;
+        padding: 0;
+        margin-top: 10px;
+    }
+    .feature-item {
+        background: rgba(0, 20, 30, 0.7);
+        border: 1px solid #004466;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        border-left: 4px solid #0088aa;
+    }
+    .feature-item:hover {
+        border-color: #00ccff;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 204, 255, 0.1);
+    }
+    .feature-item strong {
+        color: #00ccff;
+        font-family: 'Orbitron', sans-serif;
+        display: block;
+        margin-bottom: 5px;
+    }
 </style>
-
 <body>
 <div class="container login-container">
+    <div class="card-login">
+        <h2 class="text-center mb-5" style="font-family: 'Orbitron', sans-serif; color: #fff; text-shadow: 0 0 100px #00ccff;">
+            BIENVENIDOS A OS STORE SOCCER
+        </h2>
+        
+        <div class="row g-4">
+            <div class="col-12">
+                <p style="color: #ccc; line-height: 1.6; text-align: center; font-size: 1.1rem;">
+                    Un sistema diseñado para gestionar el inventario de tu tienda deportiva. Controla tus productos, registra ventas, administra proveedores y lleva el control total de tus existencias, todo desde una sola plataforma segura y eficiente.
+                </p>
+            </div>
+        </div>
+    </div>
+
     <div class="card-login">
         <h2 class="text-center mb-5" style="font-family: 'Orbitron', sans-serif; color: #fff; text-shadow: 0 0 100px #00ccff;">
             INFORMACIÓN CORPORATIVA
@@ -128,15 +179,18 @@
             <div class="col-md-6">
                 <h4 style="color: #00ccff; font-family: 'Orbitron', sans-serif; border-bottom: 1px solid #004466; padding-bottom: 10px;">Nuestra Misión</h4>
                 <p style="color: #ccc; line-height: 1.6;">
-                <img src="{% static 'AppPagina/scott-and-ramona.png' %}" alt="scott-and-ramona.png" style="width: 10%; height: auto; margin-top: 10px; border-radius: 8px;">
-                    Proveer equipamiento deportivo de alta calidad integrando tecnología de vanguardia, para potenciar el rendimiento de atletas y aficionados al fútbol.
+                    <img src="{% static 'AppPagina/negocios-hombre..avif' %}" alt="Hombre de negocios con atuendo deportivo futurista" class="mission-image">
+                    Facilitar la administración de tiendas deportivas a través de herramientas digitales que optimizan el control del inventario, evitan pérdidas y mejoran la toma de decisiones
                 </p>
             </div>
             <div class="col-md-6">
-                <h4 style="color: #00ccff; font-family: 'Orbitron', sans-serif; border-bottom: 1px solid #004466; padding-bottom: 10px;">Nuestra Visión</h4>
-                <p style="color: #ccc; line-height: 1.6;">
-                    Ser líderes en el mercado deportivo digital para el año 2030, reconocidos por nuestra innovación y excelencia en servicio al cliente.
-                </p>
+                <h4 style="color: #00ccff; font-family: 'Orbitron', sans-serif; border-bottom: 1px solid #004466; padding-bottom: 10px;">Funciones Principales</h4>
+                <ul class="feature-list">
+                    <li class="feature-item"><strong>Gestión de Productos:</strong> Administra tu catálogo completo de artículos.</li>
+                    <li class="feature-item"><strong>Control de Ventas:</strong> Registra cada transacción de forma rápida y segura.</li>
+                    <li class="feature-item"><strong>Inventario en Tiempo Real:</strong> Conoce el estado de tu stock al instante.</li>
+                    <li class="feature-item"><strong>Reportes Inteligentes:</strong> Obtén análisis para tomar mejores decisiones.</li>
+                </ul>
             </div>
             <div class="col-12 mt-4">
                 <h4 style="color: #00ccff; font-family: 'Orbitron', sans-serif; border-bottom: 1px solid #004466; padding-bottom: 10px;">Quiénes Somos</h4>
@@ -150,8 +204,3 @@
 </body>
 
 {% endblock %}
-
-
-
-
-    
