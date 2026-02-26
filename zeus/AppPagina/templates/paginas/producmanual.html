@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block titulo %} OS - AGREGAR PRODUCTO {% endblock %}
+
+{% block contenido %} 
+<style>
+    /* Reutilizando estilos de login/registro para consistencia */
+    .form-container {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px 0;
+    }
+    .card-form {
+        background: rgba(0, 10, 20, 0.9);
+        border: 1px solid #00ccff;
+        box-shadow: 0 0 30px rgba(0, 204, 255, 0.15);
+        width: 100%;
+        max-width: 650px;
+        padding: 2.5rem;
+        border-radius: 15px;
+        position: relative;
+        overflow: hidden;
+    }
+    .form-label {
+        color: #00ccff;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 0.9rem;
+    }
+    .form-control-neon {
+        background: #050505;
+        border: 1px solid #004466;
+        color: #fff;
+        transition: all 0.3s;
+    }
+    .form-control-neon:focus {
+        background: #000;
+        border-color: #00ccff;
+        box-shadow: 0 0 15px rgba(0, 204, 255, 0.3);
+        color: #fff;
+    }
+    .btn-neon {
+        background: #00ccff;
+        color: #000;
+        font-family: 'Orbitron', sans-serif;
+        font-weight: bold;
+        border: none;
+        padding: 10px;
+        transition: all 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .btn-neon:hover {
+        background: #fff !important;
+        color: #00ccff !important;
+        box-shadow: 0 0 20px #00ccff;
+    }
+    .link-neon {
+        color: #0088aa;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: all 0.3s;
+    }
+    .link-neon:hover {
+        color: #00ccff;
+        text-shadow: 0 0 5px #00ccff;
+    }
+</style>
+
+<div class="container form-container">
+    <div class="card-form">
+        <h2 class="text-center mb-4" style="font-family: 'Orbitron', sans-serif; color: #fff; text-shadow: 0 0 10px #00ccff;">AGREGAR PRODUCTO MANUALMENTE</h2>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="product_id" class="form-label">ID del Producto</label>
+                <input type="text" class="form-control form-control-neon" id="product_id" name="product_id" placeholder="Ej: PROD001" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="product_name" class="form-label">Nombre del Producto</label>
+                <input type="text" class="form-control form-control-neon" id="product_name" name="product_name" placeholder="Ej: Procesador Quantum" required>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="stock" class="form-label">Stock</label>
+                    <input type="number" class="form-control form-control-neon" id="stock" name="stock" placeholder="Ej: 50" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="min_stock" class="form-label">Stock Mínimo</label>
+                    <input type="number" class="form-control form-control-neon" id="min_stock" name="min_stock" placeholder="Ej: 10" required>
+                </div>
+            </div>
+            
+            <div class="mb-4">
+                <label for="price" class="form-label">Precio del Producto (Unidad)</label>
+                <input type="number" class="form-control form-control-neon" id="price" name="price" placeholder="Ej: 1200.00" step="0.01" required>
+            </div>
+            
+            <div class="d-grid">
+                <a href="{% url 'inventario' %}" class="btn btn-neon">Agregar Producto</a>
+            </div>
+        </form>
+        <div class="text-center mt-3">
+            <a href="{% url 'inventario' %}" class="link-neon">Volver al Inventario</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

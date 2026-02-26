@@ -197,8 +197,12 @@
         <div class="col-md-4">
             <div class="info-card text-center">
                 <h3>Importar</h3>
-                <p>Cargar inventario desde archivo excel.</p>
-                <button class="gamer-btn">Importar Inventario</button>
+                <p>Cargar inventario desde este archivo excel modificado.</p>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="file" name="inventory_file" id="inventory-upload" style="display: none;" onchange="this.form.submit()">
+                    <label for="inventory-upload" class="gamer-btn" style="cursor: pointer;">Importar Inventario</label>
+                </form>
             </div>
         </div>
         <div class="col-md-4">
@@ -212,7 +216,7 @@
             <div class="info-card text-center">
                 <h3>Nuevo</h3>
                 <p>Registrar manualmente un nuevo producto.</p>
-                <button class="gamer-btn">Agregar Producto</button>
+                <a href="{% url 'producmanual' %}" class="gamer-btn">Agregar Producto</a>
             </div>
         </div>
     </div>
@@ -223,37 +227,20 @@
     <table class="gamer-table">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Producto</th>
-                <th>Categoría</th>
+                <th>ID del Producto</th>
+                <th>Nombre del Producto</th>
                 <th>Stock</th>
-                <th>Precio</th>
-                <th>Acciones</th>
+                <th>Stock Minimo</th>
+                <th>Precio del Producto (Unidad)</th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td>001</td>
-                <td>Procesador Quantum</td>
-                <td>Hardware</td>
+                <td>Ejemplo</td>
                 <td>50</td>
-                <td>$1200</td>
-                <td><button class="btn btn-sm btn-outline-light">Editar</button></td>
-            </tr>
-            <tr>
-                <td>002</td>
-                <td>Memoria Holográfica</td>
-                <td>Almacenamiento</td>
-                <td>120</td>
-                <td>$300</td>
-                <td><button class="btn btn-sm btn-outline-light">Editar</button></td>
-            </tr>
-            <tr>
-                <td>003</td>
-                <td>Interfaz Neural</td>
-                <td>Periféricos</td>
-                <td>15</td>
-                <td>$2500</td>
+                <td>5</td>
+                <td>$42000</td>
                 <td><button class="btn btn-sm btn-outline-light">Editar</button></td>
             </tr>
         </tbody>
@@ -267,5 +254,3 @@
     </div>
 </div>
 {% endblock %}
-
-

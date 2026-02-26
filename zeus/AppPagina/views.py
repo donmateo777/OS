@@ -16,3 +16,8 @@ def inventario(request):
 
 def registro(request):
     return render(request, 'paginas/registro.html')
+
+def producmanual(request):
+    return render(request, 'paginas/producmanual.html')
+
+
