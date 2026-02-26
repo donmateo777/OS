@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load static %}
+
 {% block titulo %} OS - Pantalla Principal {% endblock %}
 
 {% block contenido %} 
@@ -126,6 +128,8 @@
             <div class="col-md-6">
                 <h4 style="color: #00ccff; font-family: 'Orbitron', sans-serif; border-bottom: 1px solid #004466; padding-bottom: 10px;">Nuestra Misión</h4>
                 <p style="color: #ccc; line-height: 1.6;">
+                <img src="{% static 'AppPagina/scott-and-ramona.png' %}" alt="scott-and-ramona.png" style="width: 10%; height: auto; margin-top: 10px; border-radius: 8px;">
+                <br>
                     Proveer equipamiento deportivo de alta calidad integrando tecnología de vanguardia, para potenciar el rendimiento de atletas y aficionados al fútbol.
                 </p>
             </div>
