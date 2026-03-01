@@ -86,6 +86,7 @@
                         <div class="navbar-nav">
                             <a class="nav-link nav-link-custom {% if request.resolver_match.url_name == 'principal' %}active{% endif %}" href="{% url 'principal' %}">Pagina Principal</a>
                             <a class="nav-link nav-link-custom {% if request.resolver_match.url_name == 'inventario' %}active{% endif %}" href="{% url 'inventario' %}">Inventario</a>
+                            <a class="nav-link nav-link-custom {% if request.resolver_match.url_name == 'perfil' %}active{% endif %}" href="{% url 'perfil' %}">Perfil</a>
                         </div>
                     </div>
                 </div>

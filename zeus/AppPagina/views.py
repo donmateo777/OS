@@ -20,4 +20,10 @@ def registro(request):
 def producmanual(request):
     return render(request, 'paginas/producmanual.html')
 
+def perfil(request):
+    return render(request, 'paginas/perfil.html')
+
+def editperfil(request):
+    return render(request, 'paginas/editperfil.html')
+
 
