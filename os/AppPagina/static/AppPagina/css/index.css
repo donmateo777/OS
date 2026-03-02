@@ -1,0 +1,62 @@
+/* Estilos del Login */
+.login-container {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.card-login {
+    background: rgba(0, 10, 20, 0.9);
+    border: 1px solid #00ccff;
+    box-shadow: 0 0 30px rgba(0, 204, 255, 0.15);
+    width: 100%;
+    max-width: 450px;
+    padding: 2rem;
+    border-radius: 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+.form-label {
+    color: #00ccff;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+}
+
+.btn-neon {
+    background: #00ccff;
+    color: #000;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+    border: none;
+    padding: 10px;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.btn-neon:hover {
+    background: #fff;
+    color: #00ccff;
+    box-shadow: 0 0 20px #00ccff;
+}
+.social-btn {
+    background: transparent;
+    border: 1px solid #333;
+    color: #ccc;
+    transition: all 0.3s;
+}
+.social-btn:hover {
+    border-color: #00ccff;
+    color: #fff;
+    background: rgba(0, 204, 255, 0.1);
+}
+.link-neon {
+    color: #0088aa;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+}
+.link-neon:hover {
+    color: #00ccff;
+    text-shadow: 0 0 5px #00ccff;
+}
