@@ -53,6 +53,7 @@
                 <th>Stock</th>
                 <th>Stock Minimo</th>
                 <th>Precio del Producto (Unidad)</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -62,7 +63,10 @@
                 <td>50</td>
                 <td>5</td>
                 <td>$42000</td>
-                <td><button class="btn btn-sm btn-outline-light">Editar</button></td>
+                <td>
+                    <a href="{% url 'producmanual' %}" class="btn btn-sm btn-outline-light">Editar</a>
+                    <button class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Estás seguro de querer eliminar este producto?');">Eliminar</button>
+                </td>
             </tr>
         </tbody>
     </table>
