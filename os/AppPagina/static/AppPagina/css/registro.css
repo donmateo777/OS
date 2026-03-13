@@ -1,0 +1,35 @@
+/* Estilos del Formulario de Registro */
+.registration-container {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.card-registration {
+    background: rgba(0, 10, 20, 0.9);
+    border: 1px solid #00ccff;
+    box-shadow: 0 0 30px rgba(0, 204, 255, 0.15);
+    width: 100%;
+    max-width: 550px; /* Un poco más ancho para más campos */
+    padding: 2rem;
+    border-radius: 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-neon {
+    background: #00ccff;
+    color: #000;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+    border: none;
+    padding: 10px;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.btn-neon:hover {
+    background: #fff !important;
+    color: #00ccff !important;
+    box-shadow: 0 0 20px #00ccff;
+}

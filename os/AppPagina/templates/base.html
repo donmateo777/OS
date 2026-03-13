@@ -89,14 +89,36 @@
         .social-links i {
             margin-right: 5px; /* Espacio entre el icono y el texto */
         }
+
+        /* Estilos para el fondo del encabezado */
+        .header-bg {
+            /* Imagen de fondo estilo Cyberpunk/Tech. Puedes cambiarla por una local */
+            background-image: url("{% static 'AppPagina/img/fondologo.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        .header-overlay {
+            background: rgba(0, 0, 0, 0.75); /* Capa oscura para legibilidad del texto */
+            padding-top: 10px;
+        }
+
+        .header-logo {
+            height: 200px; /* Altura aumentada para que se vea más grande */
+            width: auto;
+            margin-bottom: 0; /* Espacio entre el logo y la barra de navegación eliminado */
+        }
     </style>
 
     {% block extra_css %}{% endblock %}
 </head>
 <body>
     {% block navigation %}
-        <nav>
-            <h1>OS STORE SOCCER</h1>
+        <header class="header-bg">
+            <div class="header-overlay">
+                <div class="text-center">
+                    <img src="{% static 'AppPagina/img/logoOS.png' %}" alt="OS Store Soccer Logo" class="header-logo">
+                </div>
             
             <!-- Barra de Navegación Mejorada -->
             <nav class="navbar navbar-expand-lg navbar-custom">
@@ -106,16 +128,16 @@
                     </button>
                     <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
                         <div class="navbar-nav">
-                            <a class="nav-link nav-link-custom {% if request.resolver_match.url_name == 'principal' %}active{% endif %}" href="{% url 'principal' %}">Pagina Principal</a>
-                            <a class="nav-link nav-link-custom {% if request.resolver_match.url_name == 'inventario' %}active{% endif %}" href="{% url 'inventario' %}">Inventario</a>
-                            <a class="nav-link nav-link-custom {% if request.resolver_match.url_name == 'perfil' %}active{% endif %}" href="{% url 'perfil' %}">Perfil</a>
+                            <a class="nav-link nav-link-custom {% if request.resolver_match.url_name == 'principal' %}active{% endif %}" href="{% url 'principal' %}"><i class="fas fa-home me-2"></i>Pagina Principal</a>
+                            <a class="nav-link nav-link-custom {% if request.resolver_match.url_name == 'inventario' %}active{% endif %}" href="{% url 'inventario' %}"><i class="fas fa-boxes-stacked me-2"></i>Inventario</a>
+                            <a class="nav-link nav-link-custom {% if request.resolver_match.url_name == 'perfil' %}active{% endif %}" href="{% url 'perfil' %}"><i class="fas fa-user-circle me-2"></i>Perfil</a>
                         </div>
                     </div>
                 </div>
             </nav>
             
-            <hr>
-        </nav>
+            </div>
+        </header>
     {% endblock %}
     {% block contenido %} 
     

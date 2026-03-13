@@ -4,187 +4,44 @@
 
 {% block titulo %} OS - Pantalla Principal {% endblock %}
 
-{% block contenido %} 
-<style>
-  /* Override de colores verdes a azules para esta vista */
-    .navbar-custom {
-        border-bottom: 2px solid #00ccff !important;
-        box-shadow: 0 0 20px rgba(0, 204, 255, 0.2) !important;
-    }
-    .nav-link-custom:hover {
-        background-color: rgba(0, 204, 255, 0.1) !important;
-        color: #00ccff !important;
-        text-shadow: 0 0 8px #00ccff !important;
-        border-left: 2px solid #00ccff !important;
-    }
-    .nav-link-custom.active {
-        color: #00ccff !important;
-        text-shadow: 0 0 10px #00ccff !important;
-        border-bottom: 2px solid #00ccff !important;
-    }
-    h1 {
-        text-shadow: 2px 2px 0 #00ccff, -2px -2px 0 #004466 !important;
-    }
-    .navbar-brand-custom {
-        text-shadow: 0 0 10px #00ccff !important;
-    }
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'AppPagina/css/principal.css' %}">
+{% endblock %}
 
-    /* Estilos del Login */
-    .login-container {
-        padding-top: 3rem;
-        padding-bottom: 1rem;
-    }
-    .card-login {
-        background: rgba(0, 10, 20, 0.9); /* <-- CAMBIAR COLOR DE FONDO AQUÍ */
-        border: 1px solid #00ccff; /* <-- CAMBIAR COLOR DEL BORDE AQUÍ */
-        box-shadow: 0 0 30px rgba(0, 204, 255, 0.15);
-        width: 100%;
-        max-width: 1500px; /* <-- CAMBIAR TAMAÑO (ANCHO) AQUÍ */
-        padding: 2rem;
-        border-radius: 15px;
-        margin: 0 auto 2rem auto; /* Centra la tarjeta y añade margen inferior */
-        position: relative;
-        overflow: hidden;
-    }
-    .card-login::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 5px;
-        background: linear-gradient(90deg, transparent, #00ccff, transparent);
-        animation: scan 2s infinite;
-    }
-    @keyframes scan {
-        0% { transform: translateX(-100%); }
-        100% { transform: translateX(100%); }
-    }
-    .form-label {
-        color: #00ccff;
-        font-family: 'Orbitron', sans-serif;
-        font-size: 0.9rem;
-    }
-    .form-control-neon {
-        background: #050505;
-        border: 1px solid #004466;
-        color: #fff;
-        transition: all 0.3s;
-    }
-    .form-control-neon:focus {
-        background: #000;
-        border-color: #00ccff;
-        box-shadow: 0 0 15px rgba(0, 204, 255, 0.3);
-        color: #fff;
-    }
-    .btn-neon {
-        background: #00ccff;
-        color: #000;
-        font-family: 'Orbitron', sans-serif;
-        font-weight: bold;
-        border: none;
-        padding: 10px;
-        transition: all 0.3s;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-    .btn-neon:hover {
-        background: #fff;
-        color: #00ccff;
-        box-shadow: 0 0 20px #00ccff;
-    }
-    .social-btn {
-        background: transparent;
-        border: 1px solid #333;
-        color: #ccc;
-        transition: all 0.3s;
-    }
-    .social-btn:hover {
-        border-color: #00ccff;
-        color: #fff;
-        background: rgba(0, 204, 255, 0.1);
-    }
-    .link-neon {
-        color: #0088aa;
-        text-decoration: none;
-        font-size: 0.9rem;
-        transition: all 0.3s;
-    }
-    .link-neon:hover {
-        color: #00ccff;
-        text-shadow: 0 0 5px #00ccff;
-    }
-    .mission-image {
-        width: 40%;
-        height: auto;
-        border-radius: 64px;
-        float: left;
-        margin-right: 20px;
-        margin-bottom: 10px;
-        transition: transform 0.3s ease-in-out;
-    border: 2px solid #00ccff;
-    box-shadow: 0 0 15px rgba(0, 204, 255, 0.4);
-    }
-    .mission-image:hover {
-        transform: scale(1.05);
-    }
-    .feature-list {
-        list-style: none;
-        padding: 0;
-        margin-top: 10px;
-    }
-    .feature-item {
-        background: rgba(0, 20, 30, 0.7);
-        border: 1px solid #004466;
-        padding: 1rem;
-        margin-bottom: 1rem;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-        border-left: 4px solid #0088aa;
-    }
-    .feature-item:hover {
-        border-color: #00ccff;
-        transform: translateY(-3px);
-        box-shadow: 0 5px 15px rgba(0, 204, 255, 0.1);
-    }
-    .feature-item strong {
-        color: #00ccff;
-        font-family: 'Orbitron', sans-serif;
-        display: block;
-        margin-bottom: 5px;
-    }
-</style>
-<body>
+{% block contenido %} 
 <div class="container login-container">
     <div class="card-login">
-        <h2 class="text-center mb-5" style="font-family: 'Orbitron', sans-serif; color: #fff; text-shadow: 0 0 100px #00ccff;">
+        <h2 class="text-center mb-4 card-title-main">
             BIENVENIDOS A OS STORE SOCCER
         </h2>
         
-        <div class="row g-4">
+        <div class="row g-4 justify-content-center">
             <div class="col-12">
-                <p style="color: #ccc; line-height: 1.6; text-align: center; font-size: 1.1rem;">
+                <p class="card-intro-text">
                     Un sistema diseñado para gestionar el inventario de tu tienda deportiva. Controla tus productos, registra ventas, administra proveedores y lleva el control total de tus existencias, todo desde una sola plataforma segura y eficiente.
                 </p>
+            </div>
+            <div class="col-auto">
+                <a href="{% url 'inventario' %}" class="btn btn-neon btn-cta">Empezar a Administrar</a>
             </div>
         </div>
     </div>
 
     <div class="card-login">
-        <h2 class="text-center mb-5" style="font-family: 'Orbitron', sans-serif; color: #fff; text-shadow: 0 0 100px #00ccff;">
+        <h2 class="text-center mb-5 card-title-main">
             INFORMACIÓN CORPORATIVA
         </h2>
         
         <div class="row g-4">
             <div class="col-md-6">
-                <h4 style="color: #00ccff; font-family: 'Orbitron', sans-serif; border-bottom: 1px solid #004466; padding-bottom: 10px;">Nuestra Misión</h4>
-                <p style="color: #ccc; line-height: 1.6;">
+                <h4 class="card-section-title">Nuestra Misión</h4>
+                <p class="card-body-text">
                     <img src="{% static 'AppPagina/img/negocios-hombre..avif' %}" alt="Hombre de negocios con atuendo deportivo futurista" class="mission-image">
-                    Facilitar la administración de tiendas deportivas a través de herramientas digitales que optimizan el control del inventario, evitan pérdidas y mejoran la toma de decisiones
+                    Facilitar la administración de tiendas deportivas a través de herramientas digitales que optimizan el control del inventario, evitan pérdidas y mejoran la toma de decisiones.
                 </p>
             </div>
             <div class="col-md-6">
-                <h4 style="color: #00ccff; font-family: 'Orbitron', sans-serif; border-bottom: 1px solid #004466; padding-bottom: 10px;">Funciones Principales</h4>
+                <h4 class="card-section-title">Funciones Principales</h4>
                 <ul class="feature-list">
                     <li class="feature-item"><strong>🧾 Gestión de productos:</strong> Registra y actualiza camisetas, tallas y precios.</li>
                     <li class="feature-item"><strong>💰 Control de ventas:</strong> Registra cada venta y obtén reportes automáticos.</li>
@@ -192,21 +49,17 @@
                     <li class="feature-item"><strong>📊 Reportes inteligentes:</strong> Analiza el movimiento de tu tienda de forma rápida.</li>
                 </ul>
             </div>
-            <div class="col-12 mt-4">
-                <h4 style="color: #00ccff; font-family: 'Orbitron', sans-serif; border-bottom: 1px solid #004466; padding-bottom: 10px;">¿Por qué usar OS Store Soccer?🏆</h4>
-                <p style="color: #ccc; line-height: 1.6;">
-                    -Ahorra tiempo en el control de inventarios.
-                    <br>
-                    -Evita errores humanos y pérdidas de stock.
-                    <br>
-                    -Accede desde cualquier dispositivo.
-                    <br>
-                    -Interfaz moderna y fácil de usar.
-                </p>
+            <div class="col-12 mt-4 text-center">
+                <h4 class="card-section-title">¿Por qué usar OS Store Soccer?</h4>
+                <ul class="why-use-list d-inline-block text-start">
+                    <li>Ahorra tiempo en el control de inventarios.</li>
+                    <li>Evita errores humanos y pérdidas de stock.</li>
+                    <li>Accede desde cualquier dispositivo.</li>
+                    <li>Interfaz moderna y fácil de usar.</li>
+                </ul>
             </div>
         </div>
     </div>
 </div>
-</body>
 
 {% endblock %}
