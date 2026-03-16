@@ -173,15 +173,41 @@ h1 {
 
 .why-use-list {
     color: #ccc;
-    line-height: 1.8;
     list-style: none;
     padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.why-use-list li {
+    background: rgba(0, 20, 30, 0.7);
+    border: 1px solid #004466;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    border-left: 4px solid #0088aa;
+    flex-basis: 48%; /* Dos columnas con espacio */
+    text-align: left;
+    line-height: 1.6;
+}
+
+.why-use-list li:hover {
+    border-color: #00ccff;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 204, 255, 0.1);
 }
 
 .why-use-list li::before {
-    content: '🏆';
     margin-right: 10px;
 }
+
+.why-use-list li:nth-child(1)::before { content: '⏱️'; }
+.why-use-list li:nth-child(2)::before { content: '🛡️'; }
+.why-use-list li:nth-child(3)::before { content: '💻'; }
+.why-use-list li:nth-child(4)::before { content: '✨'; }
 
 .btn-cta {
     padding: 12px 35px;
