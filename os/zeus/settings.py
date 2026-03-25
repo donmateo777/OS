@@ -12,17 +12,14 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-g5y**e3ksw+-t34ggc4&-8rccl#6y4$s-#cvw58v5^_$51i=z2'
 
-# SECURITY WARNING: don't run with debug turned on in production!
+
 DEBUG = True
 
 ALLOWED_HOSTS = []
@@ -70,7 +67,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'zeus.wsgi.application'
 
 
-# Database
+# base de datos DataBase
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
@@ -81,26 +78,14 @@ DATABASES = {
 }
 
 
-# Password validation
+# validación contraseña
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
+# Dejamos la lista vacía para permitir registros rápidos y simples sin restricciones
+AUTH_PASSWORD_VALIDATORS = []
 
 
-# Internationalization
+# Internacionalizacion
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
 LANGUAGE_CODE = 'es-co'
@@ -116,3 +101,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# Redirecciones para autenticación
+LOGIN_REDIRECT_URL = 'principal'
+LOGOUT_REDIRECT_URL = 'index'

@@ -17,15 +17,16 @@
             <img src="{% static 'AppPagina/img/logoOS.png' %}" alt="OS Store Soccer Logo" style="width: 180px; height: auto;">
         </div>
         
-        <form>
+        <form method="POST" autocomplete="off">
+            {% csrf_token %}
             <div class="mb-3">
-                <label for="email" class="form-label">Correo Electrónico</label>
-                <input type="email" class="form-control form-control-neon" id="email" placeholder="usuario@ejemplo.com">
+                <label for="username" class="form-label">Nombre de Usuario</label>
+                <input type="text" name="username" class="form-control form-control-neon" id="username" placeholder="Tu usuario" required autocomplete="off">
             </div>
             
             <div class="mb-3">
                 <label for="password" class="form-label">Contraseña</label>
-                <input type="password" class="form-control form-control-neon" id="password" placeholder="••••••••">
+                <input type="password" name="password" class="form-control form-control-neon" id="password" placeholder="••••••••" required autocomplete="new-password">
             </div>
             
             <div class="d-flex justify-content-end mb-4">
@@ -33,7 +34,7 @@
             </div>
             
             <div class="d-grid gap-2 mb-4">
-                <a href="{% url 'principal' %}" class="btn btn-neon">Iniciar Sesión</a>
+                <button type="submit" class="btn btn-neon">Iniciar Sesión</button>
             </div>
             
             <div class="text-center mb-3" style="color: #555; font-size: 0.9rem;">
