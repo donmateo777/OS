@@ -105,3 +105,12 @@ STATIC_URL = 'static/'
 # Redirecciones para autenticación
 LOGIN_REDIRECT_URL = 'principal'
 LOGOUT_REDIRECT_URL = 'index'
+
+# Hacer que la sesión expire al cerrar el navegador
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+#Expira en 20 minutos de inactividad (en segundos)
+SESSION_COOKIE_AGE = 1200 
+
+# Configuración de Email para Desarrollo (Muestra el código en la consola)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

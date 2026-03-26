@@ -14,18 +14,29 @@
     <div class="card-registration">
         <h2 class="text-center mb-4" style="font-family: 'Orbitron', sans-serif; color: #fff; text-shadow: 0 0 10px #00ccff;">CREAR CUENTA</h2>
         
-        <form method="POST">
+        <form method="POST" autocomplete="off">
             {% csrf_token %}
             
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger py-2 mb-3" style="background: rgba(255, 68, 68, 0.1); border: 1px solid #ff4444; color: #ff4444; font-size: 0.85rem; border-radius: 8px;">
+                    {% for error in form.non_field_errors %}
+                        <i class="fas fa-exclamation-triangle me-2"></i> {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
             {% for field in form %}
                 <div class="mb-3">
                     <label class="form-label">{{ field.label }}</label>
                     <input type="{{ field.field.widget.input_type|default:'text' }}" 
                            name="{{ field.html_name }}" 
                            class="form-control form-control-neon" 
-                           placeholder="Escribe tu {{ field.label|lower }} aquí...">
+                           placeholder="Escribe tu {{ field.label|lower }} aquí..."
+                           {% if field.field.widget.input_type == 'password' %}autocomplete="new-password"{% else %}autocomplete="off"{% endif %}>
                     {% if field.errors %}
-                        <small class="text-danger">{{ field.errors }}</small>
+                        {% for error in field.errors %}
+                            <small class="d-block mt-1" style="color: #ff4444; font-size: 0.75rem; font-family: 'Rajdhani', sans-serif;">* {{ error }}</small>
+                        {% endfor %}
                     {% endif %}
                 </div>
             {% endfor %}
@@ -35,8 +46,11 @@
                 <label class="form-check-label" for="privacyPolicy">He leído y acepto la <a href="#" class="link-neon">política de privacidad de datos</a>.</label>
             </div>
             
-            <div class="d-grid">
+            <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-neon">Crear Cuenta</button>
+                <a href="{% url 'index' %}" class="btn" style="border: 1px solid #ff4444; color: #ff4444; font-family: 'Orbitron', sans-serif; font-size: 0.85rem; text-transform: uppercase; text-decoration: none; padding: 10px; transition: 0.3s;">
+                    <i class="fas fa-times me-2"></i> Cancelar y Volver
+                </a>
             </div>
         </form>
     </div>
