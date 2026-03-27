@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titulo %} OS - GESTIÓN DE INVENTARIO {% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'AppPagina/css/inventario.css' %}">
+{% endblock %}
+
+{% block contenido %} 
+<canvas id="matrix-canvas"></canvas>
+
+<div>
+    <h1>GESTIÓN DE INVENTARIO</h1>
+    
+    <!-- Bloque de Mensajes (Feedback de Importación) -->
+    {% if messages %}
+        <div class="mt-3 mb-4">
+            {% for message in messages %}
+                <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% else %}alert-warning{% endif %} bg-dark text-info border-info" style="font-family: 'Rajdhani'; border: 1px solid #00ccff; padding: 15px; border-radius: 8px;">
+                    <strong>SISTEMA:</strong> {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Panel de Acciones -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="info-card text-center">
+                <h3>Importar</h3>
+                <p>Cargar inventario desde este archivo excel modificado.</p>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="file" name="inventory_file" id="inventory-upload" style="display: none;" onchange="this.form.submit()">
+                    <label for="inventory-upload" class="gamer-btn" style="cursor: pointer;">Importar Inventario</label>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="info-card text-center">
+                <h3>Exportar</h3>
+                <p>Descargar reporte actual de stock.</p>
+                <button class="gamer-btn">Exportar Inventario</button>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="info-card text-center">
+                <h3>Nuevo</h3>
+                <p>Registrar manualmente un nuevo producto.</p>
+                <button class="gamer-btn" onclick="window.location.href='{% url 'producmanual' %}'">Agregar Producto</button>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <h2 class="mt-5">Productos Registrados</h2>
+    <table class="gamer-table">
+        <thead>
+            <tr>
+                <th>ID del Producto</th>
+                <th>Categoría</th>
+                <th>Nombre del Producto</th>
+                <th>Stock</th>
+                <th>Precio del Producto (Unidad)</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for producto in productos %}
+                <tr>
+                    <td>{{ producto.id }}</td>
+                    <td>{{ producto.categoria.nombre }}</td>
+                    <td>
+                        {% if producto.imagen %}
+                            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" style="width: 40px; height: 40px; object-fit: cover; border: 1px solid #00ccff; border-radius: 4px; margin-right: 10px;">
+                        {% endif %}
+                        {{ producto.nombre }}
+                    </td>
+                    <td>{{ producto.stock }}</td>
+                    <td>${{ producto.precio }}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-info">Editar</button>
+                        <button class="btn btn-sm btn-outline-danger">Eliminar</button>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">No hay productos registrados en el inventario.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="text-center mt-5">
+        <div class="mt-4">
+            <button type="button" class="gamer-btn" onclick="document.getElementById('demo').innerHTML = new Date().toLocaleTimeString()">Mostrar Hora del Sistema</button>
+            <p id="demo" style="color: #00ccff; font-size: 2rem; font-family: 'Orbitron'; margin-top: 10px;"></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

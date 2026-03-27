@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titulo %} OS - AGREGAR PRODUCTO {% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'AppPagina/css/inventario.css' %}">
+    <link rel="stylesheet" href="{% static 'AppPagina/css/principal.css' %}">
+{% endblock %}
+
+{% block contenido %} 
+<div class="container mt-5">
+    <div class="card-login mx-auto" style="max-width: 600px; background: rgba(0,0,0,0.9); border: 1px solid #00ccff; box-shadow: 0 0 20px rgba(0, 204, 255, 0.3);">
+        <h2 class="text-center mb-4" style="font-family: 'Orbitron', sans-serif; color: #fff; text-shadow: 0 0 10px #00ccff;">
+            {% if editando %}ACTUALIZAR PRODUCTO{% else %}NUEVO PRODUCTO{% endif %}
+        </h2>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <!-- Nombre del Producto -->
+            <div class="mb-4">
+                <label class="form-label text-info" style="font-family: 'Rajdhani'; letter-spacing: 1px;">
+                    <i class="fas fa-tag me-2"></i>NOMBRE DEL PRODUCTO
+                </label>
+                {{ form.nombre }}
+                {% if form.nombre.errors %}<div class="text-danger small">{{ form.nombre.errors }}</div>{% endif %}
+            </div>
+
+            <!-- Descripción / Detalles -->
+            <div class="mb-4">
+                <label class="form-label text-info" style="font-family: 'Rajdhani'; letter-spacing: 1px;">
+                    <i class="fas fa-align-left me-2"></i>DETALLES / DESCRIPCIÓN
+                </label>
+                {{ form.descripcion }}
+                {% if form.descripcion.errors %}<div class="text-danger small">{{ form.descripcion.errors }}</div>{% endif %}
+            </div>
+
+            <!-- Precio -->
+            <div class="mb-4">
+                <label class="form-label text-info" style="font-family: 'Rajdhani'; letter-spacing: 1px;">
+                    <i class="fas fa-dollar-sign me-2"></i>PRECIO UNITARIO
+                </label>
+                {{ form.precio }}
+                {% if form.precio.errors %}<div class="text-danger small">{{ form.precio.errors }}</div>{% endif %}
+            </div>
+
+            <div class="row">
+                <!-- Stock -->
+                <div class="col-md-6 mb-4">
+                    <label class="form-label text-info" style="font-family: 'Rajdhani'; letter-spacing: 1px;">
+                        <i class="fas fa-cubes me-2"></i>STOCK INICIAL
+                    </label>
+                    {{ form.stock }}
+                    {% if form.stock.errors %}<div class="text-danger small">{{ form.stock.errors }}</div>{% endif %}
+                </div>
+
+                <!-- Stock Mínimo -->
+                <div class="col-md-6 mb-4">
+                    <label class="form-label text-info" style="font-family: 'Rajdhani'; letter-spacing: 1px;">
+                        <i class="fas fa-exclamation-triangle me-2"></i>STOCK MÍNIMO
+                    </label>
+                    {{ form.stock_minimo }}
+                    {% if form.stock_minimo.errors %}<div class="text-danger small">{{ form.stock_minimo.errors }}</div>{% endif %}
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <button type="submit" class="gamer-btn" style="width: 100%;">
+                    <i class="fas fa-save me-2"></i>{% if editando %}GUARDAR CAMBIOS{% else %}REGISTRAR EN INVENTARIO{% endif %}
+                </button>
+            </div>
+        </form>
+        <div class="text-center mt-3">
+            <a href="{% url 'inventario' %}" class="link-neon">Volver al Inventario</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

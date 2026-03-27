@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block titulo %} OS - Pantalla Principal {% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'AppPagina/css/principal.css' %}">
+{% endblock %}
+
+{% block contenido %} 
+<div class="container login-container">
+    <div class="card-login">
+        <h2 class="text-center mb-4 card-title-main">
+            BIENVENIDOS A OS STORE SOCCER
+        </h2>
+        
+        <div class="row g-4 justify-content-center">
+            <div class="col-12">
+                <p class="card-intro-text">
+                    Un sistema diseñado para gestionar el inventario de tu tienda deportiva. Controla tus productos, registra ventas, administra proveedores y lleva el control total de tus existencias, todo desde una sola plataforma segura y eficiente.
+                </p>
+            </div>
+            <div class="col-auto">
+                <a href="{% url 'inventario' %}" class="btn btn-neon btn-cta">Empezar a Administrar</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-login">
+        <h2 class="text-center mb-5 card-title-main">
+            INFORMACIÓN CORPORATIVA
+        </h2>
+        
+        <div class="row g-4">
+            <div class="col-md-6">
+                <h4 class="card-section-title">Nuestra Misión</h4>
+                <p class="card-body-text">
+                    <img src="{% static 'AppPagina/img/negocios-hombre..avif' %}" alt="Hombre de negocios con atuendo deportivo futurista" class="mission-image">
+                    Facilitar la administración de tiendas deportivas a través de herramientas digitales que optimizan el control del inventario, evitan pérdidas y mejoran la toma de decisiones.
+                </p>
+            </div>
+            <div class="col-md-6">
+                <h4 class="card-section-title">Funciones Principales</h4>
+                <ul class="feature-list">
+                    <li class="feature-item"><strong>🧾 Gestión de productos:</strong> Registra y actualiza camisetas, tallas y precios.</li>
+                    <li class="feature-item"><strong>💰 Control de ventas:</strong> Registra cada venta y obtén reportes automáticos.</li>
+                    <li class="feature-item"><strong>📦 Inventario en tiempo real:</strong> Visualiza la cantidad disponible de cada artículo.</li>
+                    <li class="feature-item"><strong>📊 Reportes inteligentes:</strong> Analiza el movimiento de tu tienda de forma rápida.</li>
+                </ul>
+            </div>
+            <div class="col-12 mt-4 text-center">
+                <h4 class="card-section-title">¿Por qué usar OS Store Soccer?</h4>
+                <ul class="why-use-list">
+                    <li>Ahorra tiempo en el control de inventarios.</li>
+                    <li>Evita errores humanos y pérdidas de stock.</li>
+                    <li>Accede desde cualquier dispositivo.</li>
+                    <li>Interfaz moderna y fácil de usar.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

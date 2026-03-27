@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block titulo %} OS - EDITAR PERFIL {% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'AppPagina/css/editperfil.css' %}">
+{% endblock %}
+
+{% block contenido %}
+<div class="edit-wrapper">
+    <div class="edit-card">
+        <h2 class="edit-title">Configuración de Cuenta</h2>
+        
+        <form method="POST">
+            {% csrf_token %}
+            
+            <!-- Información Personal -->
+            <div class="form-group">
+                <label for="username" class="form-label">Nombre de Usuario</label>
+                <input type="text" id="username" name="username" class="form-control-neon" value="{{ user.username }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email" class="form-label">Correo Electrónico</label>
+                <input type="email" id="email" name="email" class="form-control-neon" value="{{ user.email }}" required>
+            </div>
+
+            <!-- Separador de Seguridad -->
+            <div class="section-divider">
+                <span>SEGURIDAD</span>
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Nueva Contraseña</label>
+                <input type="password" id="password" name="password" class="form-control-neon" placeholder="Dejar vacío para no cambiar">
+            </div>
+
+            <div class="form-group">
+                <label for="confirm_password" class="form-label">Confirmar Nueva Contraseña</label>
+                <input type="password" id="confirm_password" name="confirm_password" class="form-control-neon" placeholder="Repite la contraseña">
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="row mt-5">
+                <div class="col-md-6 order-md-2 mb-3 mb-md-0">
+                    <a href="{% url 'perfil' %}" class="btn-save" style="text-decoration: none; display: block; text-align: center;">Guardar Cambios</a>
+                </div>
+                <div class="col-md-6 order-md-1">
+                    <a href="{% url 'perfil' %}" class="btn-cancel">Cancelar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
