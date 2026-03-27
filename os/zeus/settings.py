@@ -114,3 +114,7 @@ SESSION_COOKIE_AGE = 1200
 
 # Configuración de Email para Desarrollo (Muestra el código en la consola)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Configuración de archivos multimedia (Imágenes de productos)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

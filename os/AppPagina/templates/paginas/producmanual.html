@@ -4,44 +4,32 @@
 {% block titulo %} OS - AGREGAR PRODUCTO {% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'AppPagina/css/producmanual.css' %}">
+    <link rel="stylesheet" href="{% static 'AppPagina/css/inventario.css' %}">
+    <link rel="stylesheet" href="{% static 'AppPagina/css/principal.css' %}">
 {% endblock %}
 
 {% block contenido %} 
-<div class="container form-container">
-    <div class="card-form">
+<div class="container mt-5">
+    <div class="card-login mx-auto" style="max-width: 700px; background: rgba(0,0,0,0.85);">
         <h2 class="text-center mb-4" style="font-family: 'Orbitron', sans-serif; color: #fff; text-shadow: 0 0 10px #00ccff;">AGREGAR PRODUCTO MANUALMENTE</h2>
         
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <div class="mb-3">
-                <label for="product_id" class="form-label">ID del Producto</label>
-                <input type="text" class="form-control form-control-neon" id="product_id" name="product_id" placeholder="Ej: PROD001" required>
-            </div>
             
-            <div class="mb-3">
-                <label for="product_name" class="form-label">Nombre del Producto</label>
-                <input type="text" class="form-control form-control-neon" id="product_name" name="product_name" placeholder="Ej: Procesador Quantum" required>
-            </div>
-
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label for="stock" class="form-label">Stock</label>
-                    <input type="number" class="form-control form-control-neon" id="stock" name="stock" placeholder="Ej: 50" required>
+            {% for field in form %}
+                <div class="mb-3">
+                    <label class="form-label">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="text-danger small">{{ field.errors }}</div>
+                    {% endif %}
                 </div>
-                <div class="col-md-6">
-                    <label for="min_stock" class="form-label">Stock Mínimo</label>
-                    <input type="number" class="form-control form-control-neon" id="min_stock" name="min_stock" placeholder="Ej: 10" required>
-                </div>
-            </div>
+            {% endfor %}
             
-            <div class="mb-4">
-                <label for="price" class="form-label">Precio del Producto (Unidad)</label>
-                <input type="number" class="form-control form-control-neon" id="price" name="price" placeholder="Ej: 1200.00" step="0.01" required>
-            </div>
-            
-            <div class="d-grid">
-                <a href="{% url 'inventario' %}" class="btn btn-neon">Agregar Producto</a>
+            <div class="text-center mt-4">
+                <button type="submit" class="gamer-btn" style="width: 100%;">
+                    <i class="fas fa-save me-2"></i>Guardar en Inventario
+                </button>
             </div>
         </form>
         <div class="text-center mt-3">
