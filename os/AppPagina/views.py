@@ -4,11 +4,9 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from django.core.mail import send_mail
 from django.contrib import messages
-from .forms import UserRegisterForm
-from .models import Perfil, Producto, Categoria
+from .forms import UserRegisterForm, ProductoForm
+from .models import Perfil, Producto
 import random
-import openpyxl # Para leer archivos Excel
-
 
 # Create your views here.
 
@@ -30,65 +28,7 @@ def index(request):
     return render(request, 'paginas/index.html', {'form': form})
 
 def inventario(request):
-    if request.method == 'POST':
-        if 'inventory_file' in request.FILES:
-            excel_file = request.FILES['inventory_file']
-            if not excel_file.name.endswith('.xlsx'):
-                messages.error(request, 'Por favor, sube un archivo Excel válido (.xlsx).')
-                return redirect('inventario')
-
-            try:
-                workbook = openpyxl.load_workbook(excel_file)
-                sheet = workbook.active
-                
-                # Asumiendo que la primera fila son los encabezados
-                # Limpiamos los encabezados para que sean más fáciles de comparar (minúsculas y sin espacios)
-                header = [str(cell.value).strip().lower() if cell.value else "" for cell in sheet[1]]
-                
-                # Diccionario para encontrar la posición de cada columna requerida
-                col_map = {}
-                for i, h in enumerate(header):
-                    if 'nom' in h: col_map['nombre'] = i
-                    elif 'pre' in h: col_map['precio'] = i
-                    elif 'sto' in h: col_map['stock'] = i
-                    elif 'des' in h: col_map['descripcion'] = i
-                    elif 'cat' in h: col_map['categoria'] = i
-
-                # Validación básica para columnas requeridas
-                if not all(k in col_map for k in ['nombre', 'precio', 'stock']):
-                    messages.error(request, 'El archivo Excel debe contener las columnas "Nombre", "Precio" y "Stock".')
-                    return redirect('inventario')
-
-                products_added = 0
-                for row_idx in range(2, sheet.max_row + 1): # Empezar desde la segunda fila (después de los encabezados)
-                    row = [cell.value for cell in sheet[row_idx]]
-                    if not row or not any(row): continue # Saltar filas vacías
-                    
-                    try:
-                        nombre = str(row[col_map['nombre']])
-                        precio = float(row[col_map['precio']])
-                        stock = int(row[col_map['stock']])
-                        
-                        # Opcionales
-                        desc = str(row[col_map['descripcion']]) if 'descripcion' in col_map and row[col_map['descripcion']] else ""
-                        cat_name = str(row[col_map['categoria']]) if 'categoria' in col_map and row[col_map['categoria']] else "General"
-                        
-                        categoria, _ = Categoria.objects.get_or_create(nombre=cat_name)
-                        
-                        Producto.objects.create(
-                            categoria=categoria, nombre=nombre, descripcion=desc,
-                            precio=precio, stock=stock, disponible=True # Por defecto disponible al importar
-                        )
-                        products_added += 1
-                    except Exception as e:
-                        messages.warning(request, f'Error al procesar la fila {row_idx}: {e}. Se omitió este producto.')
-                        continue
-                messages.success(request, f'Se importaron {products_added} productos exitosamente.')
-                return redirect('inventario')
-            except Exception as e:
-                messages.error(request, f'Error al leer el archivo Excel: {e}')
-                return redirect('inventario')
-    productos = Producto.objects.all().order_by('nombre') # Ordenar productos para una visualización consistente
+    productos = Producto.objects.all()
     return render(request, 'paginas/inventario.html', {'productos': productos})
 
 def registro(request):
@@ -151,17 +91,34 @@ def cerrar_sesion(request):
     logout(request)
     return redirect('index')
 
-from .forms import ProductoForm # Importa el formulario de producto
-
 def producmanual(request):
     if request.method == 'POST':
-        form = ProductoForm(request.POST, request.FILES)
+        form = ProductoForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Producto agregado correctamente al inventario.')
             return redirect('inventario')
     else:
         form = ProductoForm()
     return render(request, 'paginas/producmanual.html', {'form': form})
+
+def editar_producto(request, id):
+    producto = get_object_or_404(Producto, id=id)
+    if request.method == 'POST':
+        form = ProductoForm(request.POST, instance=producto)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Producto actualizado correctamente.')
+            return redirect('inventario')
+    else:
+        form = ProductoForm(instance=producto)
+    return render(request, 'paginas/producmanual.html', {'form': form, 'editando': True})
+
+def eliminar_producto(request, id):
+    producto = get_object_or_404(Producto, id=id)
+    producto.delete()
+    messages.success(request, 'Producto eliminado del inventario.')
+    return redirect('inventario')
 
 def perfil(request):
     return render(request, 'paginas/perfil.html')

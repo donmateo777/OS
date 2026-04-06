@@ -1,103 +1,65 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block titulo %} OS - GESTIÓN DE INVENTARIO {% endblock %}
+{% block titulo %} OS - INVENTARIO {% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'AppPagina/css/inventario.css' %}">
 {% endblock %}
 
-{% block contenido %} 
-<canvas id="matrix-canvas"></canvas>
-
-<div>
-    <h1>GESTIÓN DE INVENTARIO</h1>
-    
-    <!-- Bloque de Mensajes (Feedback de Importación) -->
-    {% if messages %}
-        <div class="mt-3 mb-4">
-            {% for message in messages %}
-                <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% else %}alert-warning{% endif %} bg-dark text-info border-info" style="font-family: 'Rajdhani'; border: 1px solid #00ccff; padding: 15px; border-radius: 8px;">
-                    <strong>SISTEMA:</strong> {{ message }}
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
-
-    <!-- Panel de Acciones -->
-    <div class="row mb-4">
-        <div class="col-md-4">
-            <div class="info-card text-center">
-                <h3>Importar</h3>
-                <p>Cargar inventario desde este archivo excel modificado.</p>
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <input type="file" name="inventory_file" id="inventory-upload" style="display: none;" onchange="this.form.submit()">
-                    <label for="inventory-upload" class="gamer-btn" style="cursor: pointer;">Importar Inventario</label>
-                </form>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="info-card text-center">
-                <h3>Exportar</h3>
-                <p>Descargar reporte actual de stock.</p>
-                <button class="gamer-btn">Exportar Inventario</button>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="info-card text-center">
-                <h3>Nuevo</h3>
-                <p>Registrar manualmente un nuevo producto.</p>
-                <button class="gamer-btn" onclick="window.location.href='{% url 'producmanual' %}'">Agregar Producto</button>
-            </div>
+{% block contenido %}
+<div class="container-fluid gamer-wrapper mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="m-0">GESTIÓN DE INVENTARIO</h2>
+        <div class="d-flex gap-2">
+            <button class="gamer-btn" title="Cargar productos desde un archivo Excel o CSV" style="background: linear-gradient(45deg, #00ff88, #00aa55); padding: 10px 20px;">
+                <i class="fas fa-file-import me-2"></i> Importar desde Archivo
+            </button>
+            <button class="gamer-btn" title="Descargar la lista actual de productos" style="background: linear-gradient(45deg, #9d00ff, #6e00ff); padding: 10px 20px;">
+                <i class="fas fa-file-export me-2"></i> Exportar Inventario
+            </button>
+            <a href="{% url 'producmanual' %}" class="gamer-btn" style="padding: 10px 20px;">
+                <i class="fas fa-plus-circle me-2"></i> Nuevo Producto
+            </a>
         </div>
     </div>
 
-    <hr>
-
-    <h2 class="mt-5">Productos Registrados</h2>
-    <table class="gamer-table">
-        <thead>
-            <tr>
-                <th>ID del Producto</th>
-                <th>Categoría</th>
-                <th>Nombre del Producto</th>
-                <th>Stock</th>
-                <th>Precio del Producto (Unidad)</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for producto in productos %}
+    <div class="table-responsive">
+        <table class="gamer-table">
+            <thead>
                 <tr>
-                    <td>{{ producto.id }}</td>
-                    <td>{{ producto.categoria.nombre }}</td>
-                    <td>
-                        {% if producto.imagen %}
-                            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" style="width: 40px; height: 40px; object-fit: cover; border: 1px solid #00ccff; border-radius: 4px; margin-right: 10px;">
-                        {% endif %}
-                        {{ producto.nombre }}
-                    </td>
-                    <td>{{ producto.stock }}</td>
-                    <td>${{ producto.precio }}</td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-info">Editar</button>
-                        <button class="btn btn-sm btn-outline-danger">Eliminar</button>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos %}
+                <tr>
+                    <td>#{{ producto.id }}</td>
+                    <td><span class="text-info fw-bold">{{ producto.nombre }}</span></td>
+                    <td>{{ producto.descripcion|default:"Sin descripción" }}</td>
+                    <td class="text-success fw-bold">${{ producto.precio }}</td>
+                    <td>{{ producto.stock }} unidades</td>
+                    <td class="text-center">
+                        <a href="{% url 'editar_producto' producto.id %}" class="gamer-btn" style="background: linear-gradient(45deg, #ffcc00, #ffae00); padding: 5px 15px; font-size: 0.8rem;">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{% url 'eliminar_producto' producto.id %}" class="gamer-btn" style="background: linear-gradient(45deg, #ff4444, #cc0000); padding: 5px 15px; font-size: 0.8rem;" onclick="return confirm('¿Estás seguro de que deseas eliminar este producto?');">
+                            <i class="fas fa-trash"></i>
+                        </a>
                     </td>
                 </tr>
-            {% empty %}
+                {% empty %}
                 <tr>
-                    <td colspan="6" class="text-center">No hay productos registrados en el inventario.</td>
+                    <td colspan="6" class="text-center py-5">No hay productos registrados en el sistema.</td>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <div class="text-center mt-5">
-        <div class="mt-4">
-            <button type="button" class="gamer-btn" onclick="document.getElementById('demo').innerHTML = new Date().toLocaleTimeString()">Mostrar Hora del Sistema</button>
-            <p id="demo" style="color: #00ccff; font-size: 2rem; font-family: 'Orbitron'; margin-top: 10px;"></p>
-        </div>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 {% endblock %}
