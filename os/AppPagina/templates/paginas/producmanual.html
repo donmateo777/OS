@@ -5,6 +5,38 @@
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'AppPagina/css/index.css' %}">
+    <style>
+        /* Estilos específicos para eliminar el fondo blanco y dar espacio */
+        .form-control-neon {
+            background-color: rgba(0, 20, 30, 0.8) !important;
+            border: 1px solid #00ccff !important;
+            color: #fff !important;
+            font-family: 'Rajdhani', sans-serif;
+            padding: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control-neon:focus {
+            background-color: rgba(0, 40, 60, 0.9) !important;
+            box-shadow: 0 0 15px #00ccff !important;
+            outline: none;
+        }
+
+        .form-label {
+            font-family: 'Orbitron', sans-serif;
+            color: #00ccff;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            display: block;
+        }
+
+        /* Corregir el color de las opciones del select */
+        select.form-control-neon option {
+            background-color: #0a0a0a;
+            color: #fff;
+        }
+    </style>
 {% endblock %}
 
 {% block contenido %}
@@ -17,26 +49,43 @@
         <form method="POST" autocomplete="off">
             {% csrf_token %}
             
-            {% for field in form %}
-                <div class="mb-3">
-                    <label class="form-label">{{ field.label }}</label>
-                    {% if field.name == 'descripcion' %}
-                        <textarea name="{{ field.html_name }}" class="form-control form-control-neon" rows="3" placeholder="Escribe la descripción aquí...">{{ field.value|default:'' }}</textarea>
-                    {% else %}
-                        <input type="{{ field.field.widget.input_type|default:'text' }}" 
-                               name="{{ field.html_name }}" 
-                               class="form-control form-control-neon" 
-                               value="{{ field.value|default:'' }}"
-                               placeholder="Ingrese {{ field.label|lower }}...">
-                    {% endif %}
-                    
-                    {% if field.errors %}
-                        {% for error in field.errors %}
-                            <small class="text-danger d-block mt-1">* {{ error }}</small>
-                        {% endfor %}
-                    {% endif %}
+            <div class="row g-3"> <!-- g-3 para un espaciado vertical equilibrado -->
+                <!-- Nombre del Producto -->
+                <div class="col-12">
+                    <label class="form-label"><i class="fas fa-tag me-2"></i>Nombre</label>
+                    {{ form.nombre }}
                 </div>
-            {% endfor %}
+
+                <!-- Descripción -->
+                <div class="col-12">
+                    <label class="form-label"><i class="fas fa-align-left me-2"></i>Descripción</label>
+                    {{ form.descripcion }}
+                </div>
+
+                <!-- Precio -->
+                <div class="col-12">
+                    <label class="form-label"><i class="fas fa-dollar-sign me-2"></i>Precio (Unidad)</label>
+                    {{ form.precio }}
+                </div>
+
+                <!-- Stock -->
+                <div class="col-12">
+                    <label class="form-label"><i class="fas fa-cubes me-2"></i>Stock</label>
+                    {{ form.stock }}
+                </div>
+
+                <!-- Talla -->
+                <div class="col-12">
+                    <label class="form-label"><i class="fas fa-ruler-combined me-2"></i>Talla</label>
+                    {{ form.talla }}
+                </div>
+            </div>
+
+            {% if form.errors %}
+                <div class="alert alert-danger bg-transparent border-danger text-danger">
+                    Por favor, corrige los errores en el formulario.
+                </div>
+            {% endif %}
             
             <div class="d-grid gap-2 mt-4">
                 <button type="submit" class="btn btn-neon">

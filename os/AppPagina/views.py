@@ -1,4 +1,6 @@
 from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
@@ -43,7 +45,10 @@ def registro(request):
             
             # Generar código de 6 dígitos
             codigo = str(random.randint(100000, 999999))
-            Perfil.objects.create(user=user, codigo_verificacion=codigo)
+            # El perfil ya se creó automáticamente por el signal, solo lo actualizamos
+            perfil = user.perfil
+            perfil.codigo_verificacion = codigo
+            perfil.save()
             
             # Enviar el "correo"
             send_mail(
@@ -73,7 +78,8 @@ def verificar_email(request):
             user = perfil.user
             user.is_active = True
             user.save()
-            perfil.delete() # El código ya no es necesario
+            perfil.codigo_verificacion = "" # Limpiamos el código en lugar de borrar el perfil
+            perfil.save()
             
             # Agregamos el mensaje de éxito
             messages.success(request, '¡Cuenta creada exitosamente! Ya puedes iniciar sesión.')
@@ -119,6 +125,25 @@ def eliminar_producto(request, id):
     producto.delete()
     messages.success(request, 'Producto eliminado del inventario.')
     return redirect('inventario')
+
+def exportar_pdf(request):
+    productos = Producto.objects.all()
+    template_path = 'paginas/pdf_inventario.html'
+    context = {'productos': productos}
+    
+    # Crear la respuesta HTTP con el tipo de contenido PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="Inventario_OS_Store.pdf"'
+    
+    # Buscar la plantilla y renderizarla con el contexto
+    template = get_template(template_path)
+    html = template.render(context)
+
+    # Crear el PDF
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    if pisa_status.err:
+       return HttpResponse('Error al generar el PDF <pre>' + html + '</pre>')
+    return response
 
 def perfil(request):
     return render(request, 'paginas/perfil.html')

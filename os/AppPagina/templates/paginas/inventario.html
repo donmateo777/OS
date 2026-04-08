@@ -12,12 +12,9 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="m-0">GESTIÓN DE INVENTARIO</h2>
         <div class="d-flex gap-2">
-            <button class="gamer-btn" title="Cargar productos desde un archivo Excel o CSV" style="background: linear-gradient(45deg, #00ff88, #00aa55); padding: 10px 20px;">
-                <i class="fas fa-file-import me-2"></i> Importar desde Archivo
-            </button>
-            <button class="gamer-btn" title="Descargar la lista actual de productos" style="background: linear-gradient(45deg, #9d00ff, #6e00ff); padding: 10px 20px;">
-                <i class="fas fa-file-export me-2"></i> Exportar Inventario
-            </button>
+            <a href="{% url 'exportar_pdf' %}" class="gamer-btn" title="Descargar la lista actual de productos" style="background: linear-gradient(45deg, #9d00ff, #6e00ff); padding: 10px 20px; text-decoration: none;">
+                <i class="fas fa-file-pdf me-2"></i> Exportar Inventario (PDF)
+            </a>
             <a href="{% url 'producmanual' %}" class="gamer-btn" style="padding: 10px 20px;">
                 <i class="fas fa-plus-circle me-2"></i> Nuevo Producto
             </a>
@@ -32,6 +29,7 @@
                     <th>Nombre</th>
                     <th>Descripción</th>
                     <th>Precio</th>
+                    <th>Talla</th>
                     <th>Stock</th>
                     <th class="text-center">Acciones</th>
                 </tr>
@@ -43,6 +41,7 @@
                     <td><span class="text-info fw-bold">{{ producto.nombre }}</span></td>
                     <td>{{ producto.descripcion|default:"Sin descripción" }}</td>
                     <td class="text-success fw-bold">${{ producto.precio }}</td>
+                    <td><span class="badge bg-dark border border-info">{{ producto.talla }}</span></td>
                     <td>{{ producto.stock }} unidades</td>
                     <td class="text-center">
                         <a href="{% url 'editar_producto' producto.id %}" class="gamer-btn" style="background: linear-gradient(45deg, #ffcc00, #ffae00); padding: 5px 15px; font-size: 0.8rem;">
