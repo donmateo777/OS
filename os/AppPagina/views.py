@@ -10,6 +10,7 @@ from .forms import UserRegisterForm, ProductoForm
 from .models import Perfil, Producto
 from django.db.models import F
 from django.db.models.functions import Lower
+from django.conf import settings
 import random
 import string
 
@@ -103,7 +104,7 @@ def registro(request):
             send_mail(
                 'Código de Verificación OS Store',
                 f'Tu código de seguridad es: {codigo}',
-                'noreply@osstore.com',
+                settings.DEFAULT_FROM_EMAIL,
                 [user.email],
                 fail_silently=False,
             )
@@ -191,7 +192,7 @@ def exportar_pdf(request):
     # Crear el PDF
     pisa_status = pisa.CreatePDF(html, dest=response)
     if pisa_status.err:
-       return HttpResponse('Error al generar el PDF <pre>' + html + '</pre>')
+        return HttpResponse('Error al generar el PDF <pre>' + html + '</pre>')
     return response
 
 def perfil(request):

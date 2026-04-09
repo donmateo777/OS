@@ -112,8 +112,18 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 #Expira en 20 minutos de inactividad (en segundos)
 SESSION_COOKIE_AGE = 1200 
 
-# Configuración de Email para Desarrollo (Muestra el código en la consola)
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Configuración de Email para Producción (Envío real)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'giraldorochad@gmail.com'  # Reemplaza con tu correo
+EMAIL_HOST_PASSWORD = 'cmjy zvql mvhs yjvs'  # Reemplaza con tu Contraseña de Aplicación
+DEFAULT_FROM_EMAIL = 'OS Store <giraldorochad@gmail.com>'
+
+# Si usas Gmail, necesitarás generar una "contraseña de aplicación" si tienes la verificación en dos pasos activada.
+# Busca en Google "Gmail contraseña de aplicación" para más información.
+
 
 # Configuración de archivos multimedia (Imágenes de productos)
 MEDIA_URL = '/media/'
