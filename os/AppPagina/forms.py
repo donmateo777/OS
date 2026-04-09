@@ -13,11 +13,12 @@ class UserRegisterForm(UserCreationForm):
 class ProductoForm(forms.ModelForm):
     class Meta:
         model = Producto
-        fields = ['nombre', 'descripcion', 'precio', 'stock', 'talla']
+        fields = ['nombre', 'descripcion', 'precio', 'stock', 'min_stock', 'talla']
         widgets = {
             'nombre': forms.TextInput(attrs={'class': 'form-control-neon', 'placeholder': 'Ej: Camiseta de la Selección Colombia'}),
             'descripcion': forms.Textarea(attrs={'class': 'form-control-neon', 'rows': 3, 'placeholder': 'Ej: Equipación local, visitante, etc...'}),
             'precio': forms.NumberInput(attrs={'class': 'form-control-neon', 'placeholder': 'Ej:75000'}),
             'stock': forms.NumberInput(attrs={'class': 'form-control-neon', 'placeholder': 'Cantidad'}),
+            'min_stock': forms.NumberInput(attrs={'class': 'form-control-neon', 'placeholder': 'Stock mínimo para alerta'}),
             'talla': forms.Select(attrs={'class': 'form-control-neon'}),
         }

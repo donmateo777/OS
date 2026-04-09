@@ -32,6 +32,7 @@ class Producto(models.Model):
     descripcion = models.TextField(blank=True, null=True)
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     stock = models.IntegerField()
+    min_stock = models.IntegerField(default=0)
     talla = models.CharField(max_length=10, choices=TALLAS_CHOICES, default='M')
     fecha_agregado = models.DateTimeField(auto_now_add=True)
 

@@ -8,7 +8,10 @@ from django.core.mail import send_mail
 from django.contrib import messages
 from .forms import UserRegisterForm, ProductoForm
 from .models import Perfil, Producto
+from django.db.models import F
+from django.db.models.functions import Lower
 import random
+import string
 
 # Create your views here.
 
@@ -30,8 +33,54 @@ def index(request):
     return render(request, 'paginas/index.html', {'form': form})
 
 def inventario(request):
-    productos = Producto.objects.all()
-    return render(request, 'paginas/inventario.html', {'productos': productos})
+    productos = Producto.objects.all() # Inicia con todos los productos
+
+    # Obtener parámetros de filtro y ordenamiento de la URL
+    letra_query = request.GET.get('letra')
+    talla_query = request.GET.get('talla')
+    sort_by = request.GET.get('sort_by', 'nombre') # Por defecto ordenar por nombre
+    order = request.GET.get('order', 'asc') # Por defecto orden ascendente
+    low_stock_filter = request.GET.get('low_stock', 'off') # Por defecto filtro de stock bajo desactivado
+
+    # Aplicar filtro por letra inicial
+    if letra_query and letra_query != "Todas":
+        productos = productos.filter(nombre__istartswith=letra_query)
+
+    # Aplicar filtro por talla
+    if talla_query and talla_query != "Todas":
+        productos = productos.filter(talla=talla_query)
+
+    # Aplicar filtro de stock bajo
+    if low_stock_filter == 'on':
+        productos = productos.filter(stock__lte=F('min_stock'))
+
+    # Preparar el ordenamiento (Normalizamos a minúsculas para el nombre)
+    productos = productos.annotate(nombre_min=Lower('nombre'))
+    
+    if sort_by == 'precio':
+        criterio = 'precio'
+    elif sort_by == 'talla':
+        criterio = 'talla'
+    else:
+        criterio = 'nombre_min'
+
+    # Aplicar dirección
+    if order == 'desc':
+        productos = productos.order_by(f'-{criterio}')
+    else:
+        productos = productos.order_by(criterio)
+
+    context = {
+        'productos': productos,
+        'letra_seleccionada': letra_query,
+        'talla_seleccionada': talla_query,
+        'sort_by': sort_by,
+        'order': order,
+        'low_stock_filter': low_stock_filter == 'on', # Convertir a booleano para el checkbox
+        'abecedario': string.ascii_uppercase, # Pasa las letras A-Z al template
+        'tallas_disponibles': [c[0] for c in Producto.TALLAS_CHOICES], # Obtiene las tallas del modelo
+    }
+    return render(request, 'paginas/inventario.html', context)
 
 def registro(request):
     if request.user.is_authenticated:

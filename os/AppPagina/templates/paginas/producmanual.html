@@ -4,44 +4,12 @@
 {% block titulo %} OS - {% if editando %}EDITAR{% else %}AGREGAR{% endif %} PRODUCTO {% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'AppPagina/css/index.css' %}">
-    <style>
-        /* Estilos específicos para eliminar el fondo blanco y dar espacio */
-        .form-control-neon {
-            background-color: rgba(0, 20, 30, 0.8) !important;
-            border: 1px solid #00ccff !important;
-            color: #fff !important;
-            font-family: 'Rajdhani', sans-serif;
-            padding: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .form-control-neon:focus {
-            background-color: rgba(0, 40, 60, 0.9) !important;
-            box-shadow: 0 0 15px #00ccff !important;
-            outline: none;
-        }
-
-        .form-label {
-            font-family: 'Orbitron', sans-serif;
-            color: #00ccff;
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            display: block;
-        }
-
-        /* Corregir el color de las opciones del select */
-        select.form-control-neon option {
-            background-color: #0a0a0a;
-            color: #fff;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'AppPagina/css/inventario.css' %}">
 {% endblock %}
 
 {% block contenido %}
 <div class="container login-container">
-    <div class="card-login" style="max-width: 600px;">
+    <div class="card-login">
         <h2 class="text-center mb-4" style="font-family: 'Orbitron', sans-serif; color: #fff; text-shadow: 0 0 10px #00ccff;">
             {% if editando %} ACTUALIZAR PRODUCTO {% else %} NUEVO PRODUCTO {% endif %}
         </h2>
@@ -72,6 +40,12 @@
                 <div class="col-12">
                     <label class="form-label"><i class="fas fa-cubes me-2"></i>Stock</label>
                     {{ form.stock }}
+                </div>
+
+                <!-- Stock Mínimo -->
+                <div class="col-12">
+                    <label class="form-label"><i class="fas fa-exclamation-triangle me-2"></i>Stock Mínimo</label>
+                    {{ form.min_stock }}
                 </div>
 
                 <!-- Talla -->

@@ -21,6 +21,62 @@
         </div>
     </div>
 
+    <!-- Sección de Filtros -->
+    <div class="mb-4 p-3 border border-info rounded" style="background-color: rgba(0, 0, 0, 0.7);">
+        <form method="GET" action="{% url 'inventario' %}" class="row g-3 align-items-end">
+            <div class="col-md-2">
+                <label for="letra" class="form-label text-info">Filtrar por Letra:</label>
+                <select class="form-select form-control-neon" id="letra" name="letra">
+                    <option value="Todas">Todas las letras</option>
+                    {% for letra in abecedario %}
+                    <option value="{{ letra }}" {% if letra_seleccionada == letra %}selected{% endif %}>{{ letra }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label for="talla" class="form-label text-info">Filtrar por Talla:</label>
+                <select class="form-select form-control-neon" id="talla" name="talla">
+                    <option value="Todas">Todas</option>
+                    {% for talla in tallas_disponibles %}
+                    <option value="{{ talla }}" {% if talla_seleccionada == talla %}selected{% endif %}>{{ talla }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="sort_by" class="form-label text-info">Ordenar por:</label>
+                <select class="form-select form-control-neon" id="sort_by" name="sort_by">
+                    <option value="nombre" {% if sort_by == 'nombre' %}selected{% endif %}>Nombre (A-Z)</option>
+                    <option value="precio" {% if sort_by == 'precio' %}selected{% endif %}>Precio</option>
+                    <option value="talla" {% if sort_by == 'talla' %}selected{% endif %}>Talla</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="order" class="form-label text-info">Orden:</label>
+                <select class="form-select form-control-neon" id="order" name="order">
+                    <option value="asc" {% if order == 'asc' %}selected{% endif %}>Menor a Mayor / A-Z</option>
+                    <option value="desc" {% if order == 'desc' %}selected{% endif %}>Mayor a Menor / Z-A</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-center">
+                <div class="form-check form-switch mt-3">
+                    <input class="form-check-input" type="checkbox" id="low_stock_filter" name="low_stock" {% if low_stock_filter %}checked{% endif %}>
+                    <label class="form-check-label text-danger" for="low_stock_filter">
+                        <i class="fas fa-exclamation-triangle me-1"></i> Stock Bajo
+                    </label>
+                </div>
+            </div>
+            <div class="col-12 text-end">
+                <button type="submit" class="gamer-btn" style="background: linear-gradient(45deg, #0088aa, #00ccff); padding: 8px 20px; font-size: 0.9rem;">
+                    <i class="fas fa-filter me-2"></i> Aplicar Filtros
+                </button>
+                <a href="{% url 'inventario' %}" class="gamer-btn" style="background: linear-gradient(45deg, #ff4444, #cc0000); padding: 8px 20px; font-size: 0.9rem;">
+                    <i class="fas fa-times me-2"></i> Limpiar Filtros
+                </a>
+            </div>
+        </form>
+    </div>
+    <!-- Fin Sección de Filtros -->
+
     <div class="table-responsive">
         <table class="gamer-table">
             <thead>
@@ -31,18 +87,27 @@
                     <th>Precio</th>
                     <th>Talla</th>
                     <th>Stock</th>
+                    <th>Stock_Mín</th>
                     <th class="text-center">Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 {% for producto in productos %}
-                <tr>
+                <tr {% if producto.stock <= producto.min_stock %}class="fila-advertencia"{% endif %}>
                     <td>#{{ producto.id }}</td>
                     <td><span class="text-info fw-bold">{{ producto.nombre }}</span></td>
                     <td>{{ producto.descripcion|default:"Sin descripción" }}</td>
                     <td class="text-success fw-bold">${{ producto.precio }}</td>
                     <td><span class="badge bg-dark border border-info">{{ producto.talla }}</span></td>
-                    <td>{{ producto.stock }} unidades</td>
+                    <td>
+                        <span class="{% if producto.stock <= producto.min_stock %}stock-critico{% endif %}">
+                            {{ producto.stock }} unidades
+                        </span>
+                        {% if producto.stock <= producto.min_stock %}
+                            <i class="fas fa-exclamation-triangle text-danger ms-1" title="Stock bajo: requiere reabastecimiento"></i>
+                        {% endif %}
+                    </td>
+                    <td>{{ producto.min_stock }} unidades</td>
                     <td class="text-center">
                         <a href="{% url 'editar_producto' producto.id %}" class="gamer-btn" style="background: linear-gradient(45deg, #ffcc00, #ffae00); padding: 5px 15px; font-size: 0.8rem;">
                             <i class="fas fa-edit"></i>
@@ -54,7 +119,7 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="6" class="text-center py-5">No hay productos registrados en el sistema.</td>
+                    <td colspan="8" class="text-center py-5">No hay productos registrados en el sistema.</td>
                 </tr>
                 {% endfor %}
             </tbody>
