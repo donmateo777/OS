@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from decimal import Decimal, InvalidOperation
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 from django.shortcuts import render, redirect, get_object_or_404
@@ -148,14 +149,124 @@ def cerrar_sesion(request):
 
 def producmanual(request):
     if request.method == 'POST':
-        form = ProductoForm(request.POST)
+        form = ProductoForm(request.POST) # Este formulario solo contendrá nombre y descripción
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Producto agregado correctamente al inventario.')
-            return redirect('inventario')
+            # Guardamos los datos base (nombre y descripción) sin persistir aún en DB
+            p_base = form.save(commit=False)
+            creado_al_menos_uno = False
+            errores_por_talla = []
+            tallas_data_for_template = [] # Para repoblar el formulario en caso de error
+
+            # Recorremos las tallas definidas en el modelo
+            for talla_val, talla_label in Producto.TALLAS_CHOICES:
+                cantidad_str = request.POST.get(f'stock_{talla_val}', '0')
+                precio_str = request.POST.get(f'precio_{talla_val}', '')
+                min_stock_str = request.POST.get(f'min_stock_{talla_val}', '0')
+                
+                current_cantidad = 0
+                current_precio = None
+                current_min_stock = 0
+
+                # Almacenar la entrada actual para repoblar el formulario si hay errores
+                tallas_data_for_template.append({
+                    'talla_val': talla_val,
+                    'talla_label': talla_label,
+                    'stock': cantidad_str,
+                    'precio': precio_str,
+                    'min_stock': min_stock_str,
+                })
+
+                # Validar cantidad (stock)
+                try:
+                    current_cantidad = int(cantidad_str)
+                    if current_cantidad < 0:
+                        errores_por_talla.append(f'La cantidad para la talla {talla_label} no puede ser negativa.')
+                        continue
+                except ValueError:
+                    if cantidad_str and cantidad_str.strip() != '0': # Solo error si no está vacío y no es '0'
+                        errores_por_talla.append(f'La cantidad para la talla {talla_label} debe ser un número entero válido.')
+                    continue
+
+                # Validar precio
+                if precio_str.strip(): # Solo validar si no está vacío
+                    try:
+                        precio_str = precio_str.replace(',', '.') # Manejar formato decimal es-co
+                        current_precio = Decimal(precio_str)
+                        if current_precio < 0:
+                            errores_por_talla.append(f'El precio para la talla {talla_label} no puede ser negativo.')
+                            continue
+                    except InvalidOperation:
+                        errores_por_talla.append(f'El precio para la talla {talla_label} debe ser un número válido.')
+                        continue
+                
+                # Validar stock mínimo
+                try:
+                    current_min_stock = int(min_stock_str)
+                    if current_min_stock < 0:
+                        errores_por_talla.append(f'El stock mínimo para la talla {talla_label} no puede ser negativo.')
+                        continue
+                except ValueError:
+                    if min_stock_str and min_stock_str.strip() != '0': # Solo error si no está vacío y no es '0'
+                        errores_por_talla.append(f'El stock mínimo para la talla {talla_label} debe ser un número entero válido.')
+                    continue
+
+                # Solo crear un producto si la cantidad es mayor que 0
+                if current_cantidad > 0:
+                    if current_precio is None: # El precio es obligatorio si hay stock
+                        errores_por_talla.append(f'El precio es obligatorio para la talla {talla_label} si la cantidad es mayor a 0.')
+                        continue
+                    
+                    Producto.objects.create(
+                        nombre=p_base.nombre,
+                        descripcion=p_base.descripcion,
+                        precio=current_precio, # Usar precio específico por talla
+                        min_stock=current_min_stock, # Usar stock mínimo específico por talla
+                        talla=talla_val,
+                        stock=current_cantidad # Usar stock específico por talla
+                    )
+                    creado_al_menos_uno = True
+            
+            if errores_por_talla:
+                for error in errores_por_talla:
+                    messages.error(request, error)
+                # Volver a renderizar el formulario con los datos existentes y los errores
+                context = {'form': form, 'tallas_data_for_template': tallas_data_for_template}
+                return render(request, 'paginas/producmanual.html', context)
+
+            if creado_al_menos_uno:
+                messages.success(request, 'Productos agregados correctamente al inventario.')
+                return redirect('inventario')
+            else:
+                messages.error(request, 'Debes ingresar al menos una cantidad en alguna talla para crear un producto.')
+                # Volver a renderizar el formulario con los datos existentes
+                context = {'form': form, 'tallas_data_for_template': tallas_data_for_template}
+                return render(request, 'paginas/producmanual.html', context)
+        else: # El formulario principal (nombre/descripción) no es válido
+            messages.error(request, 'Por favor, corrige los errores en los campos principales.')
+            # También pasar las entradas específicas por talla si estaban presentes
+            tallas_data_for_template = []
+            for talla_val, talla_label in Producto.TALLAS_CHOICES:
+                tallas_data_for_template.append({
+                    'talla_val': talla_val, 'talla_label': talla_label,
+                    'stock': request.POST.get(f'stock_{talla_val}', ''),
+                    'precio': request.POST.get(f'precio_{talla_val}', ''),
+                    'min_stock': request.POST.get(f'min_stock_{talla_val}', ''),
+                })
+            context = {'form': form, 'tallas_data_for_template': tallas_data_for_template}
+            return render(request, 'paginas/producmanual.html', context)
     else:
         form = ProductoForm()
-    return render(request, 'paginas/producmanual.html', {'form': form})
+        # Inicializar tallas_data_for_template para la solicitud GET
+        tallas_data_for_template = []
+        for talla_val, talla_label in Producto.TALLAS_CHOICES:
+            tallas_data_for_template.append({
+                'talla_val': talla_val,
+                'talla_label': talla_label,
+                'stock': '',
+                'precio': '',
+                'min_stock': '',
+            })
+    return render(request, 'paginas/producmanual.html', {'form': form, 'tallas_data_for_template': tallas_data_for_template})
 
 def editar_producto(request, id):
     producto = get_object_or_404(Producto, id=id)
@@ -165,6 +276,8 @@ def editar_producto(request, id):
             form.save()
             messages.success(request, 'Producto actualizado correctamente.')
             return redirect('inventario')
+        else:
+            messages.error(request, 'Por favor, corrige los errores en el formulario.')
     else:
         form = ProductoForm(instance=producto)
     return render(request, 'paginas/producmanual.html', {'form': form, 'editando': True})

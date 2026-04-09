@@ -30,29 +30,51 @@
                     {{ form.descripcion }}
                 </div>
 
-                <!-- Precio -->
-                <div class="col-12">
-                    <label class="form-label"><i class="fas fa-dollar-sign me-2"></i>Precio (Unidad)</label>
-                    {{ form.precio }}
-                </div>
-
-                <!-- Stock -->
-                <div class="col-12">
-                    <label class="form-label"><i class="fas fa-cubes me-2"></i>Stock</label>
-                    {{ form.stock }}
-                </div>
-
-                <!-- Stock Mínimo -->
-                <div class="col-12">
-                    <label class="form-label"><i class="fas fa-exclamation-triangle me-2"></i>Stock Mínimo</label>
-                    {{ form.min_stock }}
-                </div>
-
-                <!-- Talla -->
-                <div class="col-12">
-                    <label class="form-label"><i class="fas fa-ruler-combined me-2"></i>Talla</label>
-                    {{ form.talla }}
-                </div>
+                {% if not editando %}
+                    <!-- Cantidades, precios y stock minimo por talla -->
+                    <div class="col-12">
+                        <label class="form-label mb-3"><i class="fas fa-layer-group me-2"></i>Detalles por Talla</label>
+                        <div class="row g-2">
+                            {% for talla_data in tallas_data_for_template %}
+                            <div class="col-12 mb-3 p-3 border border-secondary rounded" style="background-color: rgba(0,0,0,0.3);">
+                                <h6 class="text-info mb-3">{{ talla_data.talla_label }}</h6>
+                                <div class="row g-2">
+                                    <div class="col-md-4">
+                                        <label class="form-label small"><i class="fas fa-dollar-sign me-1"></i>Precio</label>
+                                        <input type="number" step="0.01" name="precio_{{ talla_data.talla_val }}" class="form-control form-control-neon" placeholder="Ej: 75000" min="0" value="{{ talla_data.precio }}">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label small"><i class="fas fa-cubes me-1"></i>Cantidad</label>
+                                        <input type="number" name="stock_{{ talla_data.talla_val }}" class="form-control form-control-neon" placeholder="0" min="0" value="{{ talla_data.stock }}">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label small"><i class="fas fa-exclamation-triangle me-1"></i>Stock Mínimo</label>
+                                        <input type="number" name="min_stock_{{ talla_data.talla_val }}" class="form-control form-control-neon" placeholder="0" min="0" value="{{ talla_data.min_stock }}">
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <!-- Talla, Precio, Stock y Stock Mínimo individuales (Solo al editar) -->
+                    <div class="col-12">
+                        <label class="form-label"><i class="fas fa-ruler-combined me-2"></i>Talla</label>
+                        {{ form.talla }}
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label"><i class="fas fa-dollar-sign me-2"></i>Precio</label>
+                        {{ form.precio }}
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label"><i class="fas fa-cubes me-2"></i>Stock Actual</label>
+                        {{ form.stock }}
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label"><i class="fas fa-exclamation-triangle me-2"></i>Stock Mínimo</label>
+                        {{ form.min_stock }}
+                    </div>
+                {% endif %}
             </div>
 
             {% if form.errors %}
