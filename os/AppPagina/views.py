@@ -40,6 +40,7 @@ def inventario(request):
     # Obtener parámetros de filtro y ordenamiento de la URL
     letra_query = request.GET.get('letra')
     talla_query = request.GET.get('talla')
+    q = request.GET.get('q', '')
     sort_by = request.GET.get('sort_by', 'nombre') # Por defecto ordenar por nombre
     order = request.GET.get('order', 'asc') # Por defecto orden ascendente
     low_stock_filter = request.GET.get('low_stock', 'off') # Por defecto filtro de stock bajo desactivado
@@ -47,6 +48,10 @@ def inventario(request):
     # Aplicar filtro por letra inicial
     if letra_query and letra_query != "Todas":
         productos = productos.filter(nombre__istartswith=letra_query)
+
+    # Aplicar búsqueda por texto
+    if q:
+        productos = productos.filter(nombre__icontains=q)
 
     # Aplicar filtro por talla
     if talla_query and talla_query != "Todas":
@@ -79,6 +84,7 @@ def inventario(request):
         'sort_by': sort_by,
         'order': order,
         'low_stock_filter': low_stock_filter == 'on', # Convertir a booleano para el checkbox
+        'search_query': q,
         'abecedario': string.ascii_uppercase, # Pasa las letras A-Z al template
         'tallas_disponibles': [c[0] for c in Producto.TALLAS_CHOICES], # Obtiene las tallas del modelo
     }
@@ -154,6 +160,31 @@ def producmanual(request):
         if form.is_valid():
             # Guardamos los datos base (nombre y descripción) sin persistir aún en DB
             p_base = form.save(commit=False)
+
+            # Mapeo de categorías a campos de formulario
+            mapping_campos = {
+                'seleccion': 'nombre',
+                'club': 'nombre_club',
+                'liga_esp': 'nombre_liga_esp',
+                'premier': 'nombre_premier',
+                'serie_a': 'nombre_serie_a',
+                'bundesliga': 'nombre_bundesliga',
+                'europa_otros': 'nombre_europa_otros',
+            }
+
+            tipo = form.cleaned_data['tipo_producto']
+            
+            # Obtenemos el nombre legible de la categoría (ej: "Premier League")
+            p_base.categoria = dict(form.fields['tipo_producto'].choices).get(tipo)
+
+            if tipo in mapping_campos:
+                p_base.nombre = form.cleaned_data[mapping_campos[tipo]]
+
+            # Asignamos los nuevos campos específicos
+            p_base.tipo_uniforme = form.cleaned_data.get('descripcion') # Usamos el select de equipación
+            p_base.pieza = form.cleaned_data.get('tipo_ropa')
+            p_base.genero = form.cleaned_data.get('genero')
+
             creado_al_menos_uno = False
             errores_por_talla = []
             tallas_data_for_template = [] # Para repoblar el formulario en caso de error
@@ -219,7 +250,10 @@ def producmanual(request):
                     
                     Producto.objects.create(
                         nombre=p_base.nombre,
-                        descripcion=p_base.descripcion,
+                        categoria=p_base.categoria,
+                        tipo_uniforme=p_base.tipo_uniforme,
+                        pieza=p_base.pieza,
+                        genero=p_base.genero,
                         precio=current_precio, # Usar precio específico por talla
                         min_stock=current_min_stock, # Usar stock mínimo específico por talla
                         talla=talla_val,

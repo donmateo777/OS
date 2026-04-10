@@ -29,7 +29,11 @@ class Producto(models.Model):
         ('Única', 'Única'),
     ]
     nombre = models.CharField(max_length=100)
-    descripcion = models.TextField(blank=True, null=True)
+    categoria = models.CharField(max_length=50, blank=True, null=True)
+    tipo_uniforme = models.CharField(max_length=50, blank=True, null=True)
+    pieza = models.CharField(max_length=50, blank=True, null=True)
+    genero = models.CharField(max_length=20, blank=True, null=True)
+    descripcion = models.TextField(blank=True, null=True) # Lo dejamos por si acaso
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     stock = models.IntegerField()
     min_stock = models.IntegerField(default=0)

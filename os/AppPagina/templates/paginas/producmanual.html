@@ -18,16 +18,70 @@
             {% csrf_token %}
             
             <div class="row g-3"> <!-- g-3 para un espaciado vertical equilibrado -->
-                <!-- Nombre del Producto -->
+                <!-- Categoría de Camiseta -->
                 <div class="col-12">
-                    <label class="form-label"><i class="fas fa-tag me-2"></i>Nombre</label>
+                    <label class="form-label"><i class="fas fa-list me-2"></i>Categoría</label>
+                    {{ form.tipo_producto }}
+                </div>
+
+                <!-- Lista de Selecciones -->
+                <div id="contenedor_seleccion" class="col-12">
+                    <label class="form-label"><i class="fas fa-globe me-2"></i>Selección Nacional</label>
                     {{ form.nombre }}
                 </div>
 
-                <!-- Descripción -->
+                <!-- Lista de Clubes (Oculta por defecto) -->
+                <div id="contenedor_club" class="col-12" style="display: none;">
+                    <label class="form-label"><i class="fas fa-shield-alt me-2"></i>Equipo Colombiano</label>
+                    {{ form.nombre_club }}
+                </div>
+
+                <!-- Liga Española -->
+                <div id="contenedor_liga_esp" class="col-12 liga-container" style="display: none;">
+                    <label class="form-label"><i class="fas fa-futbol me-2"></i>La Liga (España)</label>
+                    {{ form.nombre_liga_esp }}
+                </div>
+
+                <!-- Premier League -->
+                <div id="contenedor_premier" class="col-12 liga-container" style="display: none;">
+                    <label class="form-label"><i class="fas fa-crown me-2"></i>Premier League</label>
+                    {{ form.nombre_premier }}
+                </div>
+
+                <!-- Serie A -->
+                <div id="contenedor_serie_a" class="col-12 liga-container" style="display: none;">
+                    <label class="form-label"><i class="fas fa-shield-halved me-2"></i>Serie A (Italia)</label>
+                    {{ form.nombre_serie_a }}
+                </div>
+
+                <!-- Bundesliga -->
+                <div id="contenedor_bundesliga" class="col-12 liga-container" style="display: none;">
+                    <label class="form-label"><i class="fas fa-gear me-2"></i>Bundesliga</label>
+                    {{ form.nombre_bundesliga }}
+                </div>
+
+                <!-- Otros Equipos -->
+                <div id="contenedor_europa_otros" class="col-12 liga-container" style="display: none;">
+                    <label class="form-label"><i class="fas fa-star me-2"></i>Otros Equipos</label>
+                    {{ form.nombre_europa_otros }}
+                </div>
+
+                <!-- Tipo de Uniforme / Equipación -->
                 <div class="col-12">
-                    <label class="form-label"><i class="fas fa-align-left me-2"></i>Descripción</label>
+                    <label class="form-label"><i class="fas fa-tshirt me-2"></i>Tipo de Uniforme / Equipación</label>
                     {{ form.descripcion }}
+                </div>
+
+                <!-- Tipo de Ropa (Dinámico) -->
+                <div class="col-12" id="contenedor_tipo_ropa">
+                    <label class="form-label"><i class="fas fa-tags me-2"></i>Piezas Disponibles</label>
+                    {{ form.tipo_ropa }}
+                </div>
+
+                <!-- Género -->
+                <div class="col-12">
+                    <label class="form-label"><i class="fas fa-venus-mars me-2"></i>Género / Categoría</label>
+                    {{ form.genero }}
                 </div>
 
                 {% if not editando %}
@@ -92,4 +146,84 @@
         </form>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tipoSelect = document.getElementById('id_tipo_producto');
+    
+    // Mapeo de valores de tipo_producto a IDs de contenedores
+    const contenedores = {
+        'seleccion': 'contenedor_seleccion',
+        'club': 'contenedor_club',
+        'liga_esp': 'contenedor_liga_esp',
+        'premier': 'contenedor_premier',
+        'serie_a': 'contenedor_serie_a',
+        'bundesliga': 'contenedor_bundesliga',
+        'europa_otros': 'contenedor_europa_otros'
+    };
+
+    function toggleCampos() {
+        const valorSeleccionado = tipoSelect.value;
+        
+        // Ocultar todos los contenedores primero
+        Object.values(contenedores).forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.style.display = 'none';
+        });
+
+        // Mostrar solo el que corresponde
+        const idActivo = contenedores[valorSeleccionado];
+        if (idActivo) {
+            document.getElementById(idActivo).style.display = 'block';
+        }
+    }
+
+    tipoSelect.addEventListener('change', toggleCampos);
+    
+    // Ejecutar al cargar por si hay errores de validación y quedó seleccionado 'club'
+    toggleCampos();
+
+    // --- LÓGICA PARA TIPO DE ROPA DINÁMICO ---
+    const descripcionSelect = document.getElementById('id_descripcion'); // Este es el de Equipación
+    const tipoRopaSelect = document.getElementById('id_tipo_ropa');
+
+    const opcionesRopa = {
+        'Equipación Local': ['Uniforme Completo', 'Solo Camiseta', 'Solo Pantaloneta'],
+        'Equipación Visitante': ['Uniforme Completo', 'Solo Camiseta', 'Solo Pantaloneta'],
+        'Tercera Equipación': ['Uniforme Completo', 'Solo Camiseta', 'Solo Pantaloneta'],
+        'Edición Retro': ['Solo Camiseta', 'Solo Pantaloneta'],
+        'Sudadera de Entrenamiento': ['Sudadera Completa', 'Solo Buso', 'Solo Pantalón'],
+        'Chaqueta de Presentación': ['Conjunto Completo', 'Solo Chaqueta', 'Solo Pantalón'],
+        'Ropa de Entrenamiento': ['Camisilla', 'Pantaloneta de Entreno', 'Licra', 'Top Deportivo']
+    };
+
+    function actualizarTipoRopa() {
+        const seleccion = descripcionSelect.value;
+        const opciones = opcionesRopa[seleccion] || [];
+
+        // Limpiar opciones actuales
+        tipoRopaSelect.innerHTML = '<option value="">SELECCIONE PIEZA...</option>';
+
+        // Agregar nuevas opciones basadas en la selección de equipación
+        opciones.forEach(opcion => {
+            const el = document.createElement('option');
+            el.value = opcion;
+            el.textContent = opcion;
+            tipoRopaSelect.appendChild(el);
+        });
+
+        // Ocultar si no hay equipación seleccionada
+        if (seleccion === "") {
+            document.getElementById('contenedor_tipo_ropa').style.opacity = '0.5';
+            tipoRopaSelect.disabled = true;
+        } else {
+            document.getElementById('contenedor_tipo_ropa').style.opacity = '1';
+            tipoRopaSelect.disabled = false;
+        }
+    }
+
+    descripcionSelect.addEventListener('change', actualizarTipoRopa);
+    actualizarTipoRopa(); // Ejecutar al inicio
+});
+</script>
 {% endblock %}
