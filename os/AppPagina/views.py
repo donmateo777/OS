@@ -9,6 +9,7 @@ from django.core.mail import send_mail
 from django.contrib import messages
 from .forms import UserRegisterForm, ProductoForm
 from .models import Perfil, Producto
+from django.core.paginator import Paginator
 from django.db.models import F
 from django.db.models.functions import Lower
 from django.conf import settings
@@ -38,8 +39,8 @@ def inventario(request):
     productos = Producto.objects.all() # Inicia con todos los productos
 
     # Obtener parámetros de filtro y ordenamiento de la URL
-    letra_query = request.GET.get('letra')
-    talla_query = request.GET.get('talla')
+    letra_query = request.GET.get('letra', 'Todas')
+    talla_query = request.GET.get('talla', 'Todas')
     q = request.GET.get('q', '')
     sort_by = request.GET.get('sort_by', 'nombre') # Por defecto ordenar por nombre
     order = request.GET.get('order', 'asc') # Por defecto orden ascendente
@@ -77,8 +78,13 @@ def inventario(request):
     else:
         productos = productos.order_by(criterio)
 
+    # Paginación: 10 productos por página
+    paginator = Paginator(productos, 10)
+    page_number = request.GET.get('page')
+    productos_paginados = paginator.get_page(page_number)
+
     context = {
-        'productos': productos,
+        'productos': productos_paginados,
         'letra_seleccionada': letra_query,
         'talla_seleccionada': talla_query,
         'sort_by': sort_by,
@@ -308,7 +314,30 @@ def editar_producto(request, id):
     if request.method == 'POST':
         form = ProductoForm(request.POST, instance=producto)
         if form.is_valid():
-            form.save()
+            p_edit = form.save(commit=False)
+
+            # Aplicar la misma lógica de mapeo que en producmanual
+            mapping_campos = {
+                'seleccion': 'nombre',
+                'club': 'nombre_club',
+                'liga_esp': 'nombre_liga_esp',
+                'premier': 'nombre_premier',
+                'serie_a': 'nombre_serie_a',
+                'bundesliga': 'nombre_bundesliga',
+                'europa_otros': 'nombre_europa_otros',
+            }
+
+            tipo = form.cleaned_data['tipo_producto']
+            p_edit.categoria = dict(form.fields['tipo_producto'].choices).get(tipo)
+
+            if tipo in mapping_campos:
+                p_edit.nombre = form.cleaned_data[mapping_campos[tipo]]
+
+            p_edit.tipo_uniforme = form.cleaned_data.get('descripcion')
+            p_edit.pieza = form.cleaned_data.get('tipo_ropa')
+            p_edit.genero = form.cleaned_data.get('genero')
+
+            p_edit.save()
             messages.success(request, 'Producto actualizado correctamente.')
             return redirect('inventario')
         else:

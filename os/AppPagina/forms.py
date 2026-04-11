@@ -209,8 +209,8 @@ class ProductoForm(forms.ModelForm):
         widget=forms.Select(attrs={'class': 'form-control-neon', 'id': 'id_nombre_europa_otros'})
     )
 
-    tipo_ropa = forms.ChoiceField(
-        choices=[], # Se llenará dinámicamente vía JS o en el __init__
+    tipo_ropa = forms.CharField(
+        label="Pieza",
         required=False,
         widget=forms.Select(attrs={'class': 'form-control-neon', 'id': 'id_tipo_ropa'})
     )
@@ -225,6 +225,36 @@ class ProductoForm(forms.ModelForm):
         super(ProductoForm, self).__init__(*args, **kwargs)
         # Hacemos que el nombre no sea obligatorio para que no bloquee si elegimos clubes/ligas
         self.fields['nombre'].required = False
+
+        # Si estamos editando (existe una instancia con ID)
+        if self.instance and self.instance.pk:
+            # 1. Recuperar el 'tipo_producto' (código interno) a partir de la etiqueta guardada en 'categoria'
+            categoria_guardada = self.instance.categoria
+            choices_dict = {label: code for code, label in self.fields['tipo_producto'].choices}
+            tipo_codigo = choices_dict.get(categoria_guardada)
+            
+            if tipo_codigo:
+                self.initial['tipo_producto'] = tipo_codigo
+                
+                # 2. Rellenar el selector de equipo correspondiente según la categoría
+                mapping_campos = {
+                    'seleccion': 'nombre',
+                    'club': 'nombre_club',
+                    'liga_esp': 'nombre_liga_esp',
+                    'premier': 'nombre_premier',
+                    'serie_a': 'nombre_serie_a',
+                    'bundesliga': 'nombre_bundesliga',
+                    'europa_otros': 'nombre_europa_otros',
+                }
+                campo_destino = mapping_campos.get(tipo_codigo)
+                if campo_destino:
+                    self.initial[campo_destino] = self.instance.nombre
+
+            # 3. Rellenar los campos de equipación, pieza y género
+            self.initial['descripcion'] = self.instance.tipo_uniforme
+            self.initial['tipo_ropa'] = self.instance.pieza
+            self.initial['genero'] = self.instance.genero
+
         # Si estamos agregando un producto nuevo (no hay instancia ID),
         # quitamos los campos que se manejarán por talla en el template.
         if not self.instance.pk:

@@ -200,6 +200,8 @@ document.addEventListener('DOMContentLoaded', function() {
     function actualizarTipoRopa() {
         const seleccion = descripcionSelect.value;
         const opciones = opcionesRopa[seleccion] || [];
+        // Recuperamos el valor que ya está guardado en el formulario (útil al editar)
+        const valorGuardado = "{{ form.tipo_ropa.value|default:''|escapejs }}";
 
         // Limpiar opciones actuales
         tipoRopaSelect.innerHTML = '<option value="">SELECCIONE PIEZA...</option>';
@@ -209,6 +211,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const el = document.createElement('option');
             el.value = opcion;
             el.textContent = opcion;
+            if (opcion === valorGuardado) el.selected = true;
             tipoRopaSelect.appendChild(el);
         });
 
