@@ -103,6 +103,7 @@ def registro(request):
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
+            user.email = form.cleaned_data['email']  # 🔥 AGREGA ESTA LÍNEA
             user.is_active = False  # El usuario no puede entrar hasta verificar
             user.save()
             
@@ -125,6 +126,11 @@ def registro(request):
             # Guardamos el ID en la sesión para saber a quién verificar
             request.session['user_id_verificar'] = user.id
             return redirect('verificar_email')
+        else:
+            # Si el formulario no es válido, extraemos los errores y los mostramos como alertas
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, error)
     else:
         form = UserRegisterForm()
     return render(request, 'paginas/registro.html', {'form': form})

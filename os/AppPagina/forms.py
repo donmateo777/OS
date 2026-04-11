@@ -10,6 +10,15 @@ class UserRegisterForm(UserCreationForm):
         model = User
         fields = UserCreationForm.Meta.fields + ('email',)
 
+    def clean_email(self):
+        """
+        Valida que el correo electrónico sea único en la base de datos.
+        """
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError("Este correo electrónico ya está registrado. Por favor, utiliza otro.")
+        return email
+
 SELECCIONES_CHOICES = [
     ('', 'SELECCIONE UNA SELECCIÓN...'),
     ('Alemania', 'Alemania'),
