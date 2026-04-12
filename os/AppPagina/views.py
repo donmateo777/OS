@@ -3,8 +3,9 @@ from decimal import Decimal, InvalidOperation
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, SetPasswordForm
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.contrib import messages
 from .forms import UserRegisterForm, ProductoForm
@@ -382,3 +383,62 @@ def perfil(request):
 
 def editperfil(request):
     return render(request, 'paginas/editperfil.html')
+
+def password_reset_request(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        try:
+            user = User.objects.get(email=email)
+            codigo = str(random.randint(100000, 999999))
+            perfil = user.perfil
+            perfil.codigo_verificacion = codigo
+            perfil.save()
+            
+            send_mail(
+                'Código de Restablecimiento OS Store',
+                f'Hola {user.username}, tu código para cambiar tu contraseña es: {codigo}',
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+            request.session['email_reset_pass'] = email
+            return redirect('password_reset_verify')
+        except User.DoesNotExist:
+            messages.error(request, "No existe ninguna cuenta asociada a este correo.")
+    return render(request, 'registration/password_reset_form.html')
+
+def password_reset_verify(request):
+    email = request.session.get('email_reset_pass')
+    if not email: return redirect('password_reset')
+
+    if request.method == 'POST':
+        codigo_ingresado = request.POST.get('codigo')
+        user = User.objects.get(email=email)
+        if user.perfil.codigo_verificacion == codigo_ingresado:
+            request.session['codigo_reset_verificado'] = True
+            return redirect('password_reset_confirm')
+        else:
+            messages.error(request, "El código ingresado es incorrecto.")
+            
+    return render(request, 'registration/password_reset_verify.html', {'email': email})
+
+def password_reset_confirm_custom(request):
+    email = request.session.get('email_reset_pass')
+    if not email or not request.session.get('codigo_reset_verificado'):
+        return redirect('password_reset')
+
+    user = User.objects.get(email=email)
+    if request.method == 'POST':
+        form = SetPasswordForm(user, request.POST)
+        if form.is_valid():
+            form.save()
+            user.perfil.codigo_verificacion = "" # Limpiar código
+            user.perfil.save()
+            request.session.flush() # Limpiar sesión por seguridad
+            messages.success(request, "¡Contraseña actualizada! Ya puedes iniciar sesión.")
+            return redirect('index')
+    else:
+        form = SetPasswordForm(user)
+    # Aplicar clase neon a los campos del form
+    for field in form.fields.values(): field.widget.attrs['class'] = 'form-control-neon'
+    return render(request, 'registration/password_reset_confirm.html', {'form': form})
