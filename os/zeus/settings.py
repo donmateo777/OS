@@ -128,3 +128,9 @@ DEFAULT_FROM_EMAIL = 'OS Store <giraldorochad@gmail.com>'
 # Configuración de archivos multimedia (Imágenes de productos)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Backends de autenticación para permitir login con Email
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'AppPagina.backends.EmailBackend',
+]

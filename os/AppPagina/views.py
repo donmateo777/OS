@@ -3,18 +3,17 @@ from decimal import Decimal, InvalidOperation
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout, authenticate
 from django.core.mail import send_mail
 from django.contrib import messages
-from .forms import UserRegisterForm, ProductoForm
+from .forms import UserRegisterForm, ProductoForm, LoginForm
 from .models import Perfil, Producto
 from django.core.paginator import Paginator
 from django.db.models import F
 from django.db.models.functions import Lower
 from django.conf import settings
 import random
-import string
 
 # Create your views here.
 
@@ -26,33 +25,38 @@ def index(request):
     if request.user.is_authenticated:
         return redirect('principal')
     if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
+        form = LoginForm(data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
             return redirect('principal')
     else:
-        form = AuthenticationForm()
+        form = LoginForm()
     return render(request, 'paginas/index.html', {'form': form})
 
 def inventario(request):
     productos = Producto.objects.all() # Inicia con todos los productos
 
     # Obtener parámetros de filtro y ordenamiento de la URL
-    letra_query = request.GET.get('letra', 'Todas')
+    uniforme_query = request.GET.get('uniforme', 'Todas')
     talla_query = request.GET.get('talla', 'Todas')
+    categoria_query = request.GET.get('categoria', 'Todas')
     q = request.GET.get('q', '')
     sort_by = request.GET.get('sort_by', 'nombre') # Por defecto ordenar por nombre
     order = request.GET.get('order', 'asc') # Por defecto orden ascendente
     low_stock_filter = request.GET.get('low_stock', 'off') # Por defecto filtro de stock bajo desactivado
 
-    # Aplicar filtro por letra inicial
-    if letra_query and letra_query != "Todas":
-        productos = productos.filter(nombre__istartswith=letra_query)
-
     # Aplicar búsqueda por texto
     if q:
         productos = productos.filter(nombre__icontains=q)
+
+    # Aplicar filtro por categoría
+    if categoria_query and categoria_query != "Todas":
+        productos = productos.filter(categoria=categoria_query)
+
+    # Aplicar filtro por uniforme
+    if uniforme_query and uniforme_query != "Todas":
+        productos = productos.filter(tipo_uniforme=uniforme_query)
 
     # Aplicar filtro por talla
     if talla_query and talla_query != "Todas":
@@ -83,16 +87,21 @@ def inventario(request):
     page_number = request.GET.get('page')
     productos_paginados = paginator.get_page(page_number)
 
+    categorias_disponibles = [c[1] for c in ProductoForm.base_fields['tipo_producto'].choices]
+    uniformes_disponibles = [c[1] for c in ProductoForm.base_fields['descripcion'].widget.choices if c[0] != '']
+
     context = {
         'productos': productos_paginados,
-        'letra_seleccionada': letra_query,
+        'uniforme_seleccionado': uniforme_query,
         'talla_seleccionada': talla_query,
+        'categoria_seleccionada': categoria_query,
         'sort_by': sort_by,
         'order': order,
         'low_stock_filter': low_stock_filter == 'on', # Convertir a booleano para el checkbox
         'search_query': q,
-        'abecedario': string.ascii_uppercase, # Pasa las letras A-Z al template
         'tallas_disponibles': [c[0] for c in Producto.TALLAS_CHOICES], # Obtiene las tallas del modelo
+        'categorias_disponibles': categorias_disponibles,
+        'uniformes_disponibles': uniformes_disponibles,
     }
     return render(request, 'paginas/inventario.html', context)
 
@@ -359,9 +368,48 @@ def eliminar_producto(request, id):
     return redirect('inventario')
 
 def exportar_pdf(request):
+    # Capturamos los mismos filtros que usamos en la vista de inventario
+    uniforme_query = request.GET.get('uniforme', 'Todas')
+    talla_query = request.GET.get('talla', 'Todas')
+    categoria_query = request.GET.get('categoria', 'Todas')
+    q = request.GET.get('q', '')
+    sort_by = request.GET.get('sort_by', 'nombre')
+    order = request.GET.get('order', 'asc')
+    low_stock_filter = request.GET.get('low_stock', 'off')
+
     productos = Producto.objects.all()
+
+    # Aplicar Filtros exactamente igual que en el inventario
+    if q:
+        productos = productos.filter(nombre__icontains=q)
+    if categoria_query != "Todas":
+        productos = productos.filter(categoria=categoria_query)
+    if uniforme_query != "Todas":
+        productos = productos.filter(tipo_uniforme=uniforme_query)
+    if talla_query != "Todas":
+        productos = productos.filter(talla=talla_query)
+    if low_stock_filter == 'on':
+        productos = productos.filter(stock__lte=F('min_stock'))
+
+    # Ordenamiento
+    productos = productos.annotate(nombre_min=Lower('nombre'))
+    if sort_by == 'precio':
+        criterio = 'precio'
+    elif sort_by == 'talla':
+        criterio = 'talla'
+    else:
+        criterio = 'nombre_min'
+
+    if order == 'desc':
+        productos = productos.order_by(f'-{criterio}')
+    else:
+        productos = productos.order_by(criterio)
+
     template_path = 'paginas/pdf_inventario.html'
-    context = {'productos': productos}
+    context = {
+        'productos': productos,
+        'fecha': random.randint(1000, 9999) # Solo para debug de caché si fuera necesario
+    }
     
     # Crear la respuesta HTTP con el tipo de contenido PDF
     response = HttpResponse(content_type='application/pdf')

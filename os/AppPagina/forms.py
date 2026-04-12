@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import Producto
 
 class UserRegisterForm(UserCreationForm):
@@ -18,6 +18,13 @@ class UserRegisterForm(UserCreationForm):
         if User.objects.filter(email__iexact=email).exists():
             raise forms.ValidationError("Este correo electrónico ya está registrado. Por favor, utiliza otro.")
         return email
+
+class LoginForm(AuthenticationForm):
+    username = forms.EmailField(label='Correo electrónico', widget=forms.EmailInput(attrs={
+        'class': 'form-control-neon',
+        'placeholder': 'tu@correo.com'
+    }))
+    password = forms.CharField(label='Contraseña', widget=forms.PasswordInput(attrs={'class': 'form-control-neon'}))
 
 SELECCIONES_CHOICES = [
     ('', 'SELECCIONE UNA SELECCIÓN...'),

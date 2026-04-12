@@ -55,6 +55,44 @@
             text-shadow: 0 0 10px #00ccff;
             border-bottom: 2px solid #00ccff;
         }
+
+        /* Estilo para la bolita de perfil (Estilo Pro) */
+        .profile-link-circle {
+            width: 45px;
+            height: 45px;
+            background: rgba(0, 204, 255, 0.1);
+            border: 2px solid #00ccff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00ccff !important;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 204, 255, 0.3);
+            text-decoration: none;
+            margin-left: 15px;
+            overflow: hidden; /* Para que la imagen no se salga del círculo */
+            padding: 0;
+        }
+
+        .profile-link-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .profile-link-circle:hover {
+            box-shadow: 0 0 20px #00ccff;
+            transform: scale(1.1) rotate(5deg);
+            color: #fff !important;
+        }
+
+        .profile-link-circle.active {
+            background: #00ccff;
+            color: #000 !important;
+            box-shadow: 0 0 15px #00ccff;
+        }
         
         .navbar-brand-custom {
             font-family: 'Orbitron', sans-serif;
@@ -126,11 +164,21 @@
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-                        <div class="navbar-nav">
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <!-- Links centrados -->
+                        <div class="navbar-nav mx-auto">
                             <a class="nav-link nav-link-custom {% if request.resolver_match.url_name == 'principal' %}active{% endif %}" href="{% url 'principal' %}"><i class="fas fa-home me-2"></i>Pagina Principal</a>
                             <a class="nav-link nav-link-custom {% if request.resolver_match.url_name == 'inventario' %}active{% endif %}" href="{% url 'inventario' %}"><i class="fas fa-boxes-stacked me-2"></i>Inventario</a>
-                            <a class="nav-link nav-link-custom {% if request.resolver_match.url_name == 'perfil' %}active{% endif %}" href="{% url 'perfil' %}"><i class="fas fa-user-circle me-2"></i>Perfil</a>
+                        </div>
+                        <!-- Perfil a la derecha -->
+                        <div class="navbar-nav">
+                            <a class="profile-link-circle {% if request.resolver_match.url_name == 'perfil' %}active{% endif %}" href="{% url 'perfil' %}" title="Mi Perfil">
+                                {% if request.user.is_authenticated and request.user.perfil %}
+                                    <img src="{{ request.user.perfil.get_foto_url }}" alt="Perfil" onerror="this.style.display='none'">
+                                {% else %}
+                                    <i class="fas fa-user"></i>
+                                {% endif %}
+                            </a>
                         </div>
                     </div>
                 </div>
