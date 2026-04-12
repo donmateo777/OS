@@ -14,7 +14,11 @@
     <div class="profile-card">
         <div class="profile-header">
             <!-- Foto de Perfil -->
-            <img src="https://ui-avatars.com/api/?name={{ user.username|default:'Usuario' }}&background=00ccff&color=000&size=256" alt="Foto de Perfil" class="profile-avatar">
+            {% if user.perfil %}
+                <img src="{{ user.perfil.get_foto_url }}" alt="Foto de Perfil" class="profile-avatar">
+            {% else %}
+                <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=00ccff&color=000&size=400" alt="Avatar" class="profile-avatar">
+            {% endif %}
             
             <p class="greeting-text">Hola</p>
             <h2 class="username-text">{{ user.username|default:"Usuario" }}</h2>

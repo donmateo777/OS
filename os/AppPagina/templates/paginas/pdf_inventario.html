@@ -3,54 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <style>
-        @page { size: letter; margin: 1.5cm; }
-        body { font-family: 'Helvetica', sans-serif; color: #333; }
-        .header { text-align: center; border-bottom: 2px solid #00ccff; padding-bottom: 10px; margin-bottom: 20px; }
-        h1 { color: #004466; margin: 0; text-transform: uppercase; }
-        .date { text-align: right; font-size: 0.9rem; color: #666; margin-bottom: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th { background-color: #004466; color: white; padding: 10px; text-align: left; border: 1px solid #ddd; }
-        td { padding: 8px; border: 1px solid #ddd; font-size: 0.9rem; }
-        .total-row { background-color: #f2f2f2; font-weight: bold; }
-        .text-center { text-align: center; }
+        @page {
+            size: letter landscape;
+            margin: 1cm;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 10px;
+            color: #333;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #00ccff;
+            padding-bottom: 10px;
+        }
+        h1 {
+            color: #004466;
+            text-transform: uppercase;
+            margin: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            background-color: #004466;
+            color: white;
+            padding: 8px;
+            text-align: left;
+            text-transform: uppercase;
+        }
+        td {
+            padding: 6px;
+            border-bottom: 1px solid #ddd;
+        }
+        .text-bold { font-weight: bold; }
+        .stock-bajo { color: #ff0000; font-weight: bold; }
+        .footer {
+            text-align: right;
+            margin-top: 20px;
+            font-size: 8px;
+            color: #777;
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>Reporte de Inventario - OS Store</h1>
-    </div>
-    
-    <div class="date">
-        Fecha del reporte: {% now "d/m/Y H:i" %}
+        <h1>REPORTE DE INVENTARIO - OS STORE SOCCER</h1>
+        <p>Listado detallado de existencias de uniformes</p>
     </div>
 
     <table>
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Nombre del Producto</th>
-                <th>Descripción</th>
-                <th class="text-center">Talla</th>
-                <th>Precio Unit.</th>
-                <th class="text-center">Stock</th>
+                <th>Equipo</th>
+                <th>Categoría</th>
+                <th>Uniforme</th>
+                <th>Pieza</th>
+                <th>Gén.</th>
+                <th>Talla</th>
+                <th>Precio</th>
+                <th>Stock</th>
             </tr>
         </thead>
         <tbody>
             {% for p in productos %}
             <tr>
                 <td>#{{ p.id }}</td>
-                <td>{{ p.nombre }}</td>
-                <td>{{ p.descripcion|default:"N/A" }}</td>
-                <td class="text-center">{{ p.talla }}</td>
+                <td class="text-bold">{{ p.nombre }}</td>
+                <td>{{ p.categoria }}</td>
+                <td>{{ p.tipo_uniforme }}</td>
+                <td>{{ p.pieza }}</td>
+                <td>{{ p.genero }}</td>
+                <td>{{ p.talla }}</td>
                 <td>${{ p.precio }}</td>
-                <td class="text-center">{{ p.stock }}</td>
+                <td class="{% if p.stock <= p.min_stock %}stock-bajo{% endif %}">
+                    {{ p.stock }} uds
+                </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 
-    <div style="margin-top: 30px; font-size: 0.8rem; text-align: center; color: #999;">
-        Este es un documento generado automáticamente por el sistema OS Store Soccer.
+    <div class="footer">
+        Generado automáticamente por el sistema OS Store
     </div>
 </body>
 </html>
