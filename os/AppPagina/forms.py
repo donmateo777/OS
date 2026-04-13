@@ -10,6 +10,24 @@ class UserRegisterForm(UserCreationForm):
         model = User
         fields = UserCreationForm.Meta.fields + ('email',)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Aplicamos el estilo neón y los indicadores visuales a todos los campos
+        for field_name in self.fields:
+            self.fields[field_name].widget.attrs['class'] = 'form-control-neon'
+        
+        self.fields['username'].widget.attrs['placeholder'] = 'Mín. 8 caracteres, 1 número y un símbolo (_ # *)'
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if len(username) < 8:
+            raise forms.ValidationError("El nombre debe tener al menos 8 letras.")
+        if not any(char.isdigit() for char in username):
+            raise forms.ValidationError("El nombre debe incluir al menos un número.")
+        if not any(char in '_#*' for char in username):
+            raise forms.ValidationError("El nombre debe incluir al menos un carácter como barra al piso (_), numeral (#) o asterisco (*).")
+        return username
+
     def clean_email(self):
         """
         Valida que el correo electrónico sea único en la base de datos.
@@ -27,7 +45,10 @@ class LoginForm(AuthenticationForm):
     password = forms.CharField(label='Contraseña', widget=forms.PasswordInput(attrs={'class': 'form-control-neon'}))
 
 class ProfileEditForm(forms.ModelForm):
-    email = forms.EmailField(label='Correo electrónico', widget=forms.EmailInput(attrs={'class': 'form-control-neon'}))
+    email = forms.EmailField(label='Correo electrónico', widget=forms.EmailInput(attrs={
+        'class': 'form-control-neon', 
+        'placeholder': 'tu@correo.com'
+    }))
     current_password = forms.CharField(
         label='Confirmar Cambios (Ingresa tu Contraseña Actual)',
         widget=forms.PasswordInput(attrs={'class': 'form-control-neon', 'placeholder': 'Escribe tu clave actual para guardar'}),
@@ -38,8 +59,21 @@ class ProfileEditForm(forms.ModelForm):
         model = User
         fields = ['username', 'email']
         widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control-neon'}),
+            'username': forms.TextInput(attrs={
+                'class': 'form-control-neon',
+                'placeholder': 'Mín. 8 caracteres, 1 número y un símbolo (_ # *)'
+            }),
         }
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if len(username) < 8:
+            raise forms.ValidationError("El nombre debe tener al menos 8 letras.")
+        if not any(char.isdigit() for char in username):
+            raise forms.ValidationError("El nombre debe incluir al menos un número.")
+        if not any(char in '_#*' for char in username):
+            raise forms.ValidationError("El nombre debe incluir al menos un carácter como barra al piso (_), numeral (#) o asterisco (*).")
+        return username
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
