@@ -3,8 +3,9 @@ from decimal import Decimal, InvalidOperation
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, SetPasswordForm
 from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
+from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.contrib import messages
 from .forms import UserRegisterForm, ProductoForm, LoginForm, ProfileEditForm
@@ -14,6 +15,7 @@ from django.db.models import F
 from django.db.models.functions import Lower
 from django.conf import settings
 import random
+import string
 
 # Create your views here.
 
@@ -25,38 +27,33 @@ def index(request):
     if request.user.is_authenticated:
         return redirect('principal')
     if request.method == 'POST':
-        form = LoginForm(data=request.POST)
+        form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
             return redirect('principal')
     else:
-        form = LoginForm()
+        form = AuthenticationForm()
     return render(request, 'paginas/index.html', {'form': form})
 
 def inventario(request):
     productos = Producto.objects.all() # Inicia con todos los productos
 
     # Obtener parámetros de filtro y ordenamiento de la URL
-    uniforme_query = request.GET.get('uniforme', 'Todas')
+    letra_query = request.GET.get('letra', 'Todas')
     talla_query = request.GET.get('talla', 'Todas')
-    categoria_query = request.GET.get('categoria', 'Todas')
     q = request.GET.get('q', '')
     sort_by = request.GET.get('sort_by', 'nombre') # Por defecto ordenar por nombre
     order = request.GET.get('order', 'asc') # Por defecto orden ascendente
     low_stock_filter = request.GET.get('low_stock', 'off') # Por defecto filtro de stock bajo desactivado
 
+    # Aplicar filtro por letra inicial
+    if letra_query and letra_query != "Todas":
+        productos = productos.filter(nombre__istartswith=letra_query)
+
     # Aplicar búsqueda por texto
     if q:
         productos = productos.filter(nombre__icontains=q)
-
-    # Aplicar filtro por categoría
-    if categoria_query and categoria_query != "Todas":
-        productos = productos.filter(categoria=categoria_query)
-
-    # Aplicar filtro por uniforme
-    if uniforme_query and uniforme_query != "Todas":
-        productos = productos.filter(tipo_uniforme=uniforme_query)
 
     # Aplicar filtro por talla
     if talla_query and talla_query != "Todas":
@@ -87,21 +84,16 @@ def inventario(request):
     page_number = request.GET.get('page')
     productos_paginados = paginator.get_page(page_number)
 
-    categorias_disponibles = [c[1] for c in ProductoForm.base_fields['tipo_producto'].choices]
-    uniformes_disponibles = [c[1] for c in ProductoForm.base_fields['descripcion'].widget.choices if c[0] != '']
-
     context = {
         'productos': productos_paginados,
-        'uniforme_seleccionado': uniforme_query,
+        'letra_seleccionada': letra_query,
         'talla_seleccionada': talla_query,
-        'categoria_seleccionada': categoria_query,
         'sort_by': sort_by,
         'order': order,
         'low_stock_filter': low_stock_filter == 'on', # Convertir a booleano para el checkbox
         'search_query': q,
+        'abecedario': string.ascii_uppercase, # Pasa las letras A-Z al template
         'tallas_disponibles': [c[0] for c in Producto.TALLAS_CHOICES], # Obtiene las tallas del modelo
-        'categorias_disponibles': categorias_disponibles,
-        'uniformes_disponibles': uniformes_disponibles,
     }
     return render(request, 'paginas/inventario.html', context)
 
@@ -368,48 +360,9 @@ def eliminar_producto(request, id):
     return redirect('inventario')
 
 def exportar_pdf(request):
-    # Capturamos los mismos filtros que usamos en la vista de inventario
-    uniforme_query = request.GET.get('uniforme', 'Todas')
-    talla_query = request.GET.get('talla', 'Todas')
-    categoria_query = request.GET.get('categoria', 'Todas')
-    q = request.GET.get('q', '')
-    sort_by = request.GET.get('sort_by', 'nombre')
-    order = request.GET.get('order', 'asc')
-    low_stock_filter = request.GET.get('low_stock', 'off')
-
     productos = Producto.objects.all()
-
-    # Aplicar Filtros exactamente igual que en el inventario
-    if q:
-        productos = productos.filter(nombre__icontains=q)
-    if categoria_query != "Todas":
-        productos = productos.filter(categoria=categoria_query)
-    if uniforme_query != "Todas":
-        productos = productos.filter(tipo_uniforme=uniforme_query)
-    if talla_query != "Todas":
-        productos = productos.filter(talla=talla_query)
-    if low_stock_filter == 'on':
-        productos = productos.filter(stock__lte=F('min_stock'))
-
-    # Ordenamiento
-    productos = productos.annotate(nombre_min=Lower('nombre'))
-    if sort_by == 'precio':
-        criterio = 'precio'
-    elif sort_by == 'talla':
-        criterio = 'talla'
-    else:
-        criterio = 'nombre_min'
-
-    if order == 'desc':
-        productos = productos.order_by(f'-{criterio}')
-    else:
-        productos = productos.order_by(criterio)
-
     template_path = 'paginas/pdf_inventario.html'
-    context = {
-        'productos': productos,
-        'fecha': random.randint(1000, 9999) # Solo para debug de caché si fuera necesario
-    }
+    context = {'productos': productos}
     
     # Crear la respuesta HTTP con el tipo de contenido PDF
     response = HttpResponse(content_type='application/pdf')
@@ -496,3 +449,57 @@ def verificar_cambio_email(request):
         error = "Código incorrecto o expirado."
         return render(request, 'paginas/verificar_cambio_email.html', {'error': error})
     return render(request, 'paginas/verificar_cambio_email.html')
+            user = User.objects.get(email=email)
+            codigo = str(random.randint(100000, 999999))
+            perfil = user.perfil
+            perfil.codigo_verificacion = codigo
+            perfil.save()
+            
+            send_mail(
+                'Código de Restablecimiento OS Store',
+                f'Hola {user.username}, tu código para cambiar tu contraseña es: {codigo}',
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+            request.session['email_reset_pass'] = email
+            return redirect('password_reset_verify')
+        except User.DoesNotExist:
+            messages.error(request, "No existe ninguna cuenta asociada a este correo.")
+    return render(request, 'registration/password_reset_form.html')
+
+def password_reset_verify(request):
+    email = request.session.get('email_reset_pass')
+    if not email: return redirect('password_reset')
+
+    if request.method == 'POST':
+        codigo_ingresado = request.POST.get('codigo')
+        user = User.objects.get(email=email)
+        if user.perfil.codigo_verificacion == codigo_ingresado:
+            request.session['codigo_reset_verificado'] = True
+            return redirect('password_reset_confirm')
+        else:
+            messages.error(request, "El código ingresado es incorrecto.")
+            
+    return render(request, 'registration/password_reset_verify.html', {'email': email})
+
+def password_reset_confirm_custom(request):
+    email = request.session.get('email_reset_pass')
+    if not email or not request.session.get('codigo_reset_verificado'):
+        return redirect('password_reset')
+
+    user = User.objects.get(email=email)
+    if request.method == 'POST':
+        form = SetPasswordForm(user, request.POST)
+        if form.is_valid():
+            form.save()
+            user.perfil.codigo_verificacion = "" # Limpiar código
+            user.perfil.save()
+            request.session.flush() # Limpiar sesión por seguridad
+            messages.success(request, "¡Contraseña actualizada! Ya puedes iniciar sesión.")
+            return redirect('index')
+    else:
+        form = SetPasswordForm(user)
+    # Aplicar clase neon a los campos del form
+    for field in form.fields.values(): field.widget.attrs['class'] = 'form-control-neon'
+    return render(request, 'registration/password_reset_confirm.html', {'form': form})
