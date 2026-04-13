@@ -7,6 +7,8 @@ import hashlib
 class Perfil(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     codigo_verificacion = models.CharField(max_length=6, blank=True, null=True)
+    email_temp = models.EmailField(max_length=254, blank=True, null=True)
+    username_temp = models.CharField(max_length=150, blank=True, null=True)
     
     def __str__(self):
         return f"Perfil de {self.user.username}"

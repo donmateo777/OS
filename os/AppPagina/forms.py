@@ -26,6 +26,27 @@ class LoginForm(AuthenticationForm):
     }))
     password = forms.CharField(label='Contraseña', widget=forms.PasswordInput(attrs={'class': 'form-control-neon'}))
 
+class ProfileEditForm(forms.ModelForm):
+    email = forms.EmailField(label='Correo electrónico', widget=forms.EmailInput(attrs={'class': 'form-control-neon'}))
+    current_password = forms.CharField(
+        label='Confirmar Cambios (Ingresa tu Contraseña Actual)',
+        widget=forms.PasswordInput(attrs={'class': 'form-control-neon', 'placeholder': 'Escribe tu clave actual para guardar'}),
+        required=True
+    )
+
+    class Meta:
+        model = User
+        fields = ['username', 'email']
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control-neon'}),
+        }
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email__iexact=email).exclude(pk=self.instance.pk).exists():
+            raise forms.ValidationError("Este correo electrónico ya está en uso. Por favor, prueba otro.")
+        return email
+
 SELECCIONES_CHOICES = [
     ('', 'SELECCIONE UNA SELECCIÓN...'),
     ('Alemania', 'Alemania'),

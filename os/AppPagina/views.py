@@ -4,10 +4,10 @@ from django.template.loader import get_template
 from xhtml2pdf import pisa
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
 from django.core.mail import send_mail
 from django.contrib import messages
-from .forms import UserRegisterForm, ProductoForm, LoginForm
+from .forms import UserRegisterForm, ProductoForm, LoginForm, ProfileEditForm
 from .models import Perfil, Producto
 from django.core.paginator import Paginator
 from django.db.models import F
@@ -429,4 +429,70 @@ def perfil(request):
     return render(request, 'paginas/perfil.html')
 
 def editperfil(request):
-    return render(request, 'paginas/editperfil.html')
+    if not request.user.is_authenticated:
+        return redirect('index')
+        
+    user = request.user
+    email_original = user.email
+    perfil_obj = user.perfil
+
+    if request.method == 'POST':
+        form = ProfileEditForm(request.POST, instance=request.user)
+        if form.is_valid():
+            current_password = form.cleaned_data.get('current_password')
+            
+            # 1. Validar identidad con la contraseña
+            if not request.user.check_password(current_password):
+                messages.error(request, 'Contraseña incorrecta. No se guardaron los cambios.')
+                return render(request, 'paginas/editperfil.html', {'form': form})
+
+            nuevo_email = form.cleaned_data.get('email').lower().strip()
+            nuevo_username = form.cleaned_data.get('username')
+
+            # 2. Si el correo cambió, no guardamos NADA en User todavía
+            if nuevo_email != email_original.lower().strip():
+                codigo = str(random.randint(100000, 999999))
+                perfil_obj.codigo_verificacion = codigo
+                perfil_obj.email_temp = nuevo_email
+                perfil_obj.username_temp = nuevo_username
+                perfil_obj.save()
+                
+                send_mail(
+                    'Verifica tus cambios - OS Store',
+                    f'Tu código para validar el cambio de correo es: {codigo}',
+                    settings.DEFAULT_FROM_EMAIL,
+                    [nuevo_email],
+                    fail_silently=False,
+                )
+                messages.warning(request, 'Confirma el código enviado a tu nuevo correo para aplicar todos los cambios.')
+                return redirect('verificar_cambio_email')
+            
+            # 3. Si el email NO cambió, guardamos el nombre inmediatamente
+            form.save()
+            messages.success(request, 'Perfil actualizado correctamente.')
+            return redirect('perfil')
+    else:
+        form = ProfileEditForm(instance=request.user)
+    return render(request, 'paginas/editperfil.html', {'form': form})
+
+def verificar_cambio_email(request):
+    if request.method == 'POST':
+        codigo = request.POST.get('codigo').strip()
+        perfil_obj = request.user.perfil
+        if perfil_obj.codigo_verificacion == codigo and perfil_obj.email_temp:
+            user = request.user
+            # Aplicamos los cambios que estaban en espera
+            user.email = perfil_obj.email_temp
+            user.username = perfil_obj.username_temp
+            user.save()
+            
+            # Limpiamos los campos temporales
+            perfil_obj.codigo_verificacion = ""
+            perfil_obj.email_temp = ""
+            perfil_obj.username_temp = ""
+            perfil_obj.save()
+            messages.success(request, '¡Correo actualizado con éxito!')
+            return redirect('perfil')
+        error = "Código incorrecto o expirado."
+        return render(request, 'paginas/verificar_cambio_email.html', {'error': error})
+    return render(request, 'paginas/verificar_cambio_email.html')
