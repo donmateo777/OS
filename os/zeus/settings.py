@@ -131,6 +131,5 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # Backends de autenticación para permitir login con Email
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
     'AppPagina.backends.EmailBackend',
 ]

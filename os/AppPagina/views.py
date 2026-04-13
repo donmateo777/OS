@@ -27,13 +27,13 @@ def index(request):
     if request.user.is_authenticated:
         return redirect('principal')
     if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
+        form = LoginForm(data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
             return redirect('principal')
     else:
-        form = AuthenticationForm()
+        form = LoginForm()
     return render(request, 'paginas/index.html', {'form': form})
 
 def inventario(request):
