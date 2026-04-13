@@ -42,6 +42,8 @@ def inventario(request):
     # Obtener parámetros de filtro y ordenamiento de la URL
     letra_query = request.GET.get('letra', 'Todas')
     talla_query = request.GET.get('talla', 'Todas')
+    categoria_query = request.GET.get('categoria', 'Todas')
+    uniforme_query = request.GET.get('uniforme', 'Todas')
     q = request.GET.get('q', '')
     sort_by = request.GET.get('sort_by', 'nombre') # Por defecto ordenar por nombre
     order = request.GET.get('order', 'asc') # Por defecto orden ascendente
@@ -58,6 +60,14 @@ def inventario(request):
     # Aplicar filtro por talla
     if talla_query and talla_query != "Todas":
         productos = productos.filter(talla=talla_query)
+
+    # Aplicar filtro por categoría
+    if categoria_query and categoria_query != "Todas":
+        productos = productos.filter(categoria=categoria_query)
+
+    # Aplicar filtro por uniforme
+    if uniforme_query and uniforme_query != "Todas":
+        productos = productos.filter(tipo_uniforme=uniforme_query)
 
     # Aplicar filtro de stock bajo
     if low_stock_filter == 'on':
@@ -88,12 +98,16 @@ def inventario(request):
         'productos': productos_paginados,
         'letra_seleccionada': letra_query,
         'talla_seleccionada': talla_query,
+        'categoria_seleccionada': categoria_query,
+        'uniforme_seleccionado': uniforme_query,
         'sort_by': sort_by,
         'order': order,
         'low_stock_filter': low_stock_filter == 'on', # Convertir a booleano para el checkbox
         'search_query': q,
         'abecedario': string.ascii_uppercase, # Pasa las letras A-Z al template
         'tallas_disponibles': [c[0] for c in Producto.TALLAS_CHOICES], # Obtiene las tallas del modelo
+        'categorias_disponibles': Producto.objects.values_list('categoria', flat=True).distinct().order_by('categoria'),
+        'uniformes_disponibles': Producto.objects.values_list('tipo_uniforme', flat=True).distinct().order_by('tipo_uniforme'),
     }
     return render(request, 'paginas/inventario.html', context)
 
