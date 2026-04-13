@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+{% block titulo %} OS - Recuperar Contraseña {% endblock %}
+
+{% block navigation %}
+{% endblock %}
+
+{% block extra_css %} <link rel="stylesheet" href="{% static 'AppPagina/css/index.css' %}"> {% endblock %}
+
+{% block contenido %}
+<div class="container login-container">
+    <div class="card-login">
+        <h2 class="text-center mb-4" style="font-family: 'Orbitron', sans-serif; color: #fff; text-shadow: 0 0 10px #00ccff;">RECUPERAR CUENTA</h2>
+        <p class="text-center text-light mb-4" style="font-family: 'Rajdhani', sans-serif;">Ingresa tu correo para recibir un código de seguridad.</p>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label class="form-label">Correo Electrónico</label>
+                <input type="email" name="email" class="form-control form-control-neon" placeholder="tu@correo.com" required>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-danger py-2 mb-3" style="background: rgba(255, 68, 68, 0.1); border: 1px solid #ff4444; color: #ff4444; font-size: 0.85rem;">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <button type="submit" class="btn btn-neon w-100">Enviar Código</button>
+            <div class="text-center mt-3"><a href="{% url 'index' %}" class="link-neon" style="font-size: 0.9rem;">Volver al Inicio</a></div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

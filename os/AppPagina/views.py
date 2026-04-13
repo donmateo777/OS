@@ -450,9 +450,9 @@ def verificar_cambio_email(request):
         return render(request, 'paginas/verificar_cambio_email.html', {'error': error})
     return render(request, 'paginas/verificar_cambio_email.html')
 
-def password_reset_request(request):
+def escribir_correo(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
+        email = request.POST.get('email').lower().strip()
         try:
             user = User.objects.get(email=email)
             codigo = str(random.randint(100000, 999999))
@@ -468,30 +468,30 @@ def password_reset_request(request):
                 fail_silently=False,
             )
             request.session['email_reset_pass'] = email
-            return redirect('password_reset_verify')
+            return redirect('verificar_codigo_correo')
         except User.DoesNotExist:
             messages.error(request, "No existe ninguna cuenta asociada a este correo.")
-    return render(request, 'registration/password_reset_form.html')
+    return render(request, 'paginas/escribir_correo.html')
 
-def password_reset_verify(request):
+def verificar_codigo_correo(request):
     email = request.session.get('email_reset_pass')
-    if not email: return redirect('password_reset')
+    if not email: return redirect('escribir_correo')
 
     if request.method == 'POST':
         codigo_ingresado = request.POST.get('codigo')
         user = User.objects.get(email=email)
         if user.perfil.codigo_verificacion == codigo_ingresado:
             request.session['codigo_reset_verificado'] = True
-            return redirect('password_reset_confirm')
+            return redirect('nueva_contrasena')
         else:
             messages.error(request, "El código ingresado es incorrecto.")
             
-    return render(request, 'registration/password_reset_verify.html', {'email': email})
+    return render(request, 'paginas/verificar_codigo_correo.html', {'email': email})
 
-def password_reset_confirm_custom(request):
+def nueva_contrasena(request):
     email = request.session.get('email_reset_pass')
     if not email or not request.session.get('codigo_reset_verificado'):
-        return redirect('password_reset')
+        return redirect('escribir_correo')
 
     user = User.objects.get(email=email)
     if request.method == 'POST':
@@ -507,4 +507,4 @@ def password_reset_confirm_custom(request):
         form = SetPasswordForm(user)
     # Aplicar clase neon a los campos del form
     for field in form.fields.values(): field.widget.attrs['class'] = 'form-control-neon'
-    return render(request, 'registration/password_reset_confirm.html', {'form': form})
+    return render(request, 'paginas/nueva_contrasena.html', {'form': form})

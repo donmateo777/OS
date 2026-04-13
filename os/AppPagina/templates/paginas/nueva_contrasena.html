@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+{% block titulo %} OS - Nueva Contraseña {% endblock %}
+
+{% block navigation %}
+{% endblock %}
+
+{% block extra_css %} <link rel="stylesheet" href="{% static 'AppPagina/css/index.css' %}"> {% endblock %}
+
+{% block contenido %}
+<div class="container login-container">
+    <div class="card-login">
+        <h2 class="text-center mb-4" style="font-family: 'Orbitron', sans-serif; color: #fff; text-shadow: 0 0 10px #00ccff;">NUEVA CLAVE</h2>
+        <p class="text-center text-light mb-4" style="font-family: 'Rajdhani', sans-serif;">Establece tu nueva contraseña de acceso.</p>
+        
+        <form method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="mb-3">
+                    <label class="form-label">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <small class="text-danger">{{ field.errors.0 }}</small>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger py-2 mb-3">{{ form.non_field_errors.0 }}</div>
+            {% endif %}
+
+            <button type="submit" class="btn btn-neon w-100">Actualizar y Entrar</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
