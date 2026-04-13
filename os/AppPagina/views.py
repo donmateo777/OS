@@ -449,6 +449,11 @@ def verificar_cambio_email(request):
         error = "Código incorrecto o expirado."
         return render(request, 'paginas/verificar_cambio_email.html', {'error': error})
     return render(request, 'paginas/verificar_cambio_email.html')
+
+def password_reset_request(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        try:
             user = User.objects.get(email=email)
             codigo = str(random.randint(100000, 999999))
             perfil = user.perfil
